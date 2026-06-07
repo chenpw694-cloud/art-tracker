@@ -1,0 +1,3644 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#FFF5ED">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="场景原画">
+<meta name="description" content="场景原画学习自律助手 - 12周系统学习计划">
+<title>场景原画学习助手</title>
+<style>
+/* ===== CSS Custom Properties — 明亮暖色主题 ===== */
+:root {
+  --bg-primary: #FFF5ED;
+  --bg-secondary: #FFFBF7;
+  --bg-card: #FFFFFF;
+  --accent: #FF6B4A;
+  --accent-soft: rgba(255,107,74,0.1);
+  --accent-glow: rgba(255,107,74,0.18);
+  --accent2: #F4A340;
+  --accent2-soft: rgba(244,163,64,0.1);
+  --success: #2EC4B6;
+  --success-soft: rgba(46,196,182,0.1);
+  --danger: #E85D75;
+  --danger-soft: rgba(232,93,117,0.08);
+  --warning: #F4A340;
+  --warning-soft: rgba(244,163,64,0.1);
+  --text-primary: #2D3436;
+  --text-secondary: #636E72;
+  --text-muted: #B2BEC3;
+  --border: #F0E0D0;
+  --border-light: #F8EDE4;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow: 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+  --tab-height: 64px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ===== Reset ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(180deg, #FFF5ED 0%, #FFF0E5 30%, #FFEDE0 100%);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ===== App Shell ===== */
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: transparent;
+}
+
+/* ===== Header ===== */
+.app-header {
+  padding: 14px 16px 8px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(180deg, #FFF5ED 40%, rgba(255,245,237,0.85) 80%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.app-header h1 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #FF6B4A 0%, #F4A340 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.02em;
+}
+.app-header .subtitle {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 1px;
+  font-weight: 500;
+}
+
+/* ===== Main Content Area ===== */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 12px 16px;
+  padding-bottom: calc(var(--tab-height) + var(--safe-bottom) + 12px);
+  -webkit-overflow-scrolling: touch;
+}
+.view { display: none; animation: fadeSlideIn 0.3s ease; }
+.view.active { display: block; }
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Bottom Tab Bar ===== */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: calc(var(--tab-height) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  background: rgba(255,255,255,0.95);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 100;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 -2px 16px rgba(0,0,0,0.04);
+}
+.tab-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.62rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.25s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  padding: 8px 4px 4px;
+  position: relative;
+}
+.tab-btn .tab-icon { font-size: 1.3rem; line-height: 1; transition: transform 0.25s; }
+.tab-btn.active { color: var(--accent); }
+.tab-btn.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--accent);
+}
+.tab-btn.active .tab-icon { transform: scale(1.08); }
+.tab-btn:active { transform: scale(0.93); }
+
+/* ===== Cards ===== */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 10px;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, border-color 0.2s;
+  border-left: 3px solid transparent;
+}
+.card:hover { box-shadow: var(--shadow); }
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.card-subtitle {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* ===== Task List ===== */
+.task-list { list-style: none; }
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 10px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  margin-bottom: 1px;
+  border-left: 3px solid transparent;
+}
+.task-item:active { background: #FFF0E8; }
+.task-item.completed { opacity: 0.6; border-left-color: var(--success); background: var(--success-soft); }
+.task-item.completed .task-text { text-decoration: line-through; text-decoration-color: var(--success); }
+.task-check {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 50%;
+  border: 2px solid #E0D0C0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+  margin-top: 1px;
+  font-size: 0.7rem;
+  background: #FFF;
+}
+.task-item.completed .task-check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+.task-body { flex: 1; min-width: 0; }
+.task-text { font-size: 0.88rem; color: var(--text-primary); line-height: 1.5; font-weight: 500; }
+.task-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+.task-duration {
+  font-size: 0.68rem;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 3px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+/* ===== Progress Bar ===== */
+.progress-wrap { margin: 8px 0; }
+.progress-label { display: flex; justify-content: space-between; font-size: 0.73rem; color: var(--text-secondary); margin-bottom: 4px; font-weight: 500; }
+.progress-bar {
+  height: 10px;
+  background: #F5EBE0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.5s ease;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+}
+.progress-fill.danger { background: linear-gradient(90deg, var(--danger), #FF8E9E); }
+.progress-fill.success { background: linear-gradient(90deg, var(--success), #6EE7D8); }
+
+/* ===== Streak Display ===== */
+.streak-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, #FFF0E5, #FFE8D5);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  border: 1px solid #F5DDC8;
+  box-shadow: var(--shadow-sm);
+}
+.streak-item { text-align: center; }
+.streak-value {
+  font-size: 1.35rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #FF6B4A, #F4A340);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.streak-label { font-size: 0.6rem; color: var(--text-muted); margin-top: -2px; font-weight: 500; }
+.streak-divider { width: 1px; height: 24px; background: #F0D5C0; }
+
+/* ===== Week cards in roadmap ===== */
+.week-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: all 0.25s;
+  border-left: 4px solid transparent;
+}
+.week-card.current { border-left-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+.week-card.completed { border-left-color: var(--success); }
+.week-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.week-card-header:active { background: #FFF5ED; }
+.week-num {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+  background: #F8EDE4;
+  color: var(--text-muted);
+}
+.week-card.current .week-num { background: var(--accent); color: #fff; }
+.week-card.completed .week-num { background: var(--success); color: #fff; }
+.week-info { flex: 1; min-width: 0; }
+.week-theme { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); }
+.week-status {
+  font-size: 0.65rem;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.week-status.in-progress { background: var(--accent-soft); color: var(--accent); }
+.week-status.done { background: var(--success-soft); color: var(--success); }
+.week-status.upcoming { background: #F8EDE4; color: var(--text-muted); }
+.week-card-body {
+  display: none;
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 14px;
+}
+.week-card.expanded .week-card-body { display: block; }
+.week-card-body .day-group { margin-bottom: 10px; }
+.week-card-body .day-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.week-card-body .day-task {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding: 3px 0 3px 14px;
+  position: relative;
+}
+.week-card-body .day-task::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #E0D0C0;
+}
+.week-milestone {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, var(--accent-soft), var(--accent2-soft));
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: var(--accent);
+  border-left: 3px solid var(--accent);
+  font-weight: 500;
+}
+
+/* ===== Settings ===== */
+.setting-group { margin-bottom: 22px; }
+.setting-group-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+.setting-label { font-size: 0.88rem; font-weight: 500; }
+.setting-desc { font-size: 0.68rem; color: var(--text-muted); }
+.setting-row input[type="time"],
+.setting-row input[type="number"] {
+  background: #FFF5ED;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  width: 100px;
+  text-align: center;
+}
+.setting-row input[type="number"] { width: 80px; }
+.setting-row input:focus { border-color: var(--accent); outline: none; }
+
+/* ===== Toggle Switch ===== */
+.toggle {
+  position: relative;
+  width: 50px;
+  height: 30px;
+  min-width: 50px;
+}
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #E0D5C8;
+  border-radius: 15px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+.toggle input:checked + .toggle-slider { background: var(--success); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+/* ===== Buttons ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(0.95); }
+.btn-primary { background: linear-gradient(135deg, #FF6B4A, #FF8560); color: #fff; box-shadow: 0 4px 12px rgba(255,107,74,0.3); }
+.btn-primary:active { box-shadow: 0 2px 6px rgba(255,107,74,0.2); }
+.btn-danger { background: var(--danger-soft); color: var(--danger); border: 1px solid rgba(232,93,117,0.3); }
+.btn-outline { background: #fff; color: var(--accent); border: 2px solid var(--accent); }
+.btn-sm { padding: 7px 14px; font-size: 0.75rem; border-radius: 20px; }
+.btn-block { width: 100%; }
+.btn-row { display: flex; gap: 8px; margin-top: 10px; }
+.btn-row .btn { flex: 1; }
+
+/* ===== Modal ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.modal-sheet {
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 24px 20px calc(20px + var(--safe-bottom));
+  animation: slideUp 0.3s ease;
+}
+.modal-sheet h3 { font-size: 1.1rem; margin-bottom: 14px; font-weight: 700; }
+.modal-sheet p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+/* ===== Toast ===== */
+.toast-container {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  width: calc(100% - 32px);
+  max-width: 400px;
+}
+.toast {
+  padding: 12px 18px;
+  border-radius: 25px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  animation: toastIn 0.3s ease;
+  pointer-events: auto;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+.toast.warn { background: #FFF4E0; color: #C77D20; border: 1px solid #F0D080; }
+.toast.success { background: #D6F8F4; color: #0A7A6E; border: 1px solid #A0E8DF; }
+.toast.error { background: #FFE8EC; color: #C0392B; border: 1px solid #F0B0B8; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== Confetti ===== */
+.confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 250; }
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  animation: confettiFall 1.6s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-60px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* ===== Empty State ===== */
+.empty-state {
+  text-align: center;
+  padding: 50px 24px;
+  color: var(--text-muted);
+}
+.empty-state .empty-icon { font-size: 3.5rem; margin-bottom: 14px; }
+.empty-state p { font-size: 0.85rem; line-height: 1.6; }
+
+/* ===== Responsive ===== */
+@media (min-width: 481px) {
+  #app { border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+}
+@media (display-mode: standalone) {
+  .app-header { padding-top: calc(20px + env(safe-area-inset-top, 0px)); }
+}
+
+/* ===== v2.0 行为科学组件 — 明亮版 ===== */
+
+/* 情绪选择器 */
+.mood-selector {
+  display: flex;
+  gap: 8px;
+  padding: 8px 0 14px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.mood-selector::-webkit-scrollbar { display: none; }
+.mood-btn {
+  min-width: 60px;
+  padding: 10px 8px;
+  border-radius: 24px;
+  border: 2px solid var(--border);
+  background: #fff;
+  color: var(--text-secondary);
+  font-size: 0.66rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: center;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: var(--shadow-sm);
+}
+.mood-btn .mood-emoji { font-size: 1.3rem; display: block; margin-bottom: 3px; }
+.mood-btn:active { transform: scale(0.93); }
+.mood-btn.selected { border-color: var(--accent); background: #FFF0EB; color: var(--accent); box-shadow: var(--shadow); }
+.mood-msg {
+  font-size: 0.78rem;
+  color: var(--accent);
+  padding: 8px 14px;
+  background: linear-gradient(135deg, var(--accent-soft), #FFF0EB);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  display: none;
+  font-weight: 500;
+}
+.mood-msg.visible { display: block; }
+
+/* 承诺卡片 */
+.commitment-card {
+  background: linear-gradient(135deg, #FFF5ED, #FFEDE0);
+  border: 2px solid transparent;
+  border-image: linear-gradient(135deg, var(--accent), var(--accent2)) 1;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+}
+.commitment-card .commit-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--accent);
+}
+.commitment-card input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-family: inherit;
+  margin-bottom: 8px;
+}
+.commitment-card input:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.commit-active {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--success-soft);
+  border-radius: 10px;
+  font-size: 0.82rem;
+  color: #0A7A6E;
+  font-weight: 600;
+}
+.commit-overdue {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* 微步骤 */
+.micro-steps-toggle {
+  font-size: 0.7rem;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 4px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  -webkit-tap-highlight-color: transparent;
+  background: var(--accent-soft);
+  border-radius: 12px;
+  font-weight: 600;
+}
+.micro-steps {
+  display: none;
+  margin: 6px 0 6px 34px;
+  padding: 8px 12px;
+  background: #FFFBF7;
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+  border: 1px dashed var(--border);
+}
+.micro-steps.visible { display: block; }
+.micro-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 0.73rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.micro-step .ms-check {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border-radius: 50%;
+  border: 2px solid #E0D0C0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  transition: all 0.2s;
+  background: #fff;
+}
+.micro-step.done { opacity: 0.5; }
+.micro-step.done .ms-text { text-decoration: line-through; }
+.micro-step.done .ms-check {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+/* 难度标签 */
+.diff-tag {
+  display: inline-block;
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 8px;
+  margin-left: 4px;
+  font-weight: 700;
+}
+.diff-tag.easy { background: var(--success-soft); color: #0A7A6E; }
+.diff-tag.medium { background: var(--warning-soft); color: #C77D20; }
+.diff-tag.hard { background: var(--danger-soft); color: var(--danger); }
+
+/* 倒计时 */
+.countdown-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  margin: 10px 0;
+  border: 1px solid var(--border-light);
+  font-size: 0.78rem;
+  box-shadow: var(--shadow-sm);
+}
+.countdown-bar.urgent { border-color: var(--danger); background: var(--danger-soft); }
+.countdown-bar .count-icon { font-size: 1.3rem; }
+.countdown-bar .count-num {
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+.countdown-bar.urgent .count-num { color: var(--danger); }
+
+/* CBT 反思 */
+.reason-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+.reason-chip {
+  padding: 8px 14px;
+  border-radius: 22px;
+  border: 1.5px solid var(--border);
+  background: #fff;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s;
+  -webkit-tap-highlight-color: transparent;
+}
+.reason-chip:active { transform: scale(0.94); }
+.reason-chip.selected { border-color: var(--accent); background: #FFF0EB; color: var(--accent); font-weight: 600; }
+
+/* 替代任务区 */
+.alt-tasks-section {
+  margin-top: 10px;
+  border-top: 2px dashed var(--border);
+  padding-top: 12px;
+}
+.alt-tasks-header {
+  font-size: 0.73rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+.alt-tasks-list { display: none; margin-top: 8px; }
+.alt-tasks-list.visible { display: block; }
+.alt-task-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 8px;
+}
+.alt-task-item:active { background: #FFF5ED; }
+.alt-task-item .alt-check {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  border: 2px solid #E0D0C0;
+}
+
+/* 周反思 */
+.weekly-reflection {
+  background: linear-gradient(135deg, #FFFBF7, #FFF5ED);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin: 10px 0;
+}
+.weekly-reflection h4 {
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.weekly-reflection .ref-q {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin: 10px 0 4px;
+  font-weight: 600;
+}
+.weekly-reflection textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 48px;
+}
+.weekly-reflection textarea:focus { border-color: var(--accent); outline: none; }
+
+/* 问责卡片 */
+.accountability-card {
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin: 8px 0;
+  white-space: pre-line;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+/* 拖延模式分析 */
+.pattern-analysis {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.pattern-analysis .pattern-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.pattern-bar {
+  height: 8px;
+  border-radius: 4px;
+  min-width: 4px;
+}
+
+/* 每日节奏卡片 */
+.daily-rhythm {
+  background: #fff;
+  border-radius: var(--radius);
+  margin-top: 10px;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.daily-rhythm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.daily-rhythm-header:active { background: #FFFBF7; }
+.daily-rhythm-header .rhythm-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.daily-rhythm-body {
+  display: none;
+  padding: 0 14px 14px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 12px;
+}
+.daily-rhythm.expanded .daily-rhythm-body { display: block; }
+.rhythm-timeline { position: relative; padding-left: 20px; }
+.rhythm-timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--border);
+  border-radius: 1px;
+}
+.rhythm-slot {
+  position: relative;
+  padding: 5px 0 5px 16px;
+  font-size: 0.73rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+.rhythm-slot::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.rhythm-slot.study::before { background: var(--accent); }
+.rhythm-slot.meal::before { background: var(--accent2); }
+.rhythm-slot.rest::before { background: var(--success); }
+.rhythm-slot.play::before { background: #A29BFE; }
+.rhythm-slot .rhythm-time {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  min-width: 44px;
+  font-family: var(--font-mono, monospace);
+}
+.rhythm-slot .rhythm-act {
+  flex: 1;
+  font-size: 0.73rem;
+}
+.rhythm-slot.study .rhythm-act { color: var(--accent); font-weight: 600; }
+.rhythm-note {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  padding: 6px 10px;
+  margin-top: 6px;
+  background: #FFFBF7;
+  border-radius: 6px;
+  line-height: 1.5;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="app-header">
+    <h1>🎨 场景原画学习助手</h1>
+    <div class="subtitle" id="header-subtitle">12周系统学习计划</div>
+  </header>
+
+  <main class="main-content" id="main-content">
+    <!-- Today View -->
+    <section class="view active" id="view-today">
+      <div id="today-content"></div>
+    </section>
+
+    <!-- Progress View -->
+    <section class="view" id="view-progress">
+      <div id="progress-content"></div>
+    </section>
+
+    <!-- Roadmap View -->
+    <section class="view" id="view-roadmap">
+      <div id="roadmap-content"></div>
+    </section>
+
+    <!-- Settings View -->
+    <section class="view" id="view-settings">
+      <div id="settings-content"></div>
+    </section>
+  </main>
+
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="today">
+      <span class="tab-icon">📋</span>今日
+    </button>
+    <button class="tab-btn" data-tab="progress">
+      <span class="tab-icon">📊</span>进度
+    </button>
+    <button class="tab-btn" data-tab="roadmap">
+      <span class="tab-icon">🗺️</span>路线图
+    </button>
+    <button class="tab-btn" data-tab="settings">
+      <span class="tab-icon">⚙️</span>设置
+    </button>
+  </nav>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+<div id="modal-container"></div>
+<div class="confetti-container" id="confetti-container"></div>
+
+<script>
+// ============================================================================
+// 场景原画学习助手 - 完整应用逻辑
+// ============================================================================
+
+// ==================== 12周学习计划数据 ====================
+const LEARNING_PLAN = {
+  week1: {
+    theme: '场景写生到创作 + 型的理解',
+    description: '巩固几何概括能力，从现实写生中提取元素转化为创作素材',
+    skillsGained: ['几何概括', '写生观察', '体积感', '写生转创作', '形体分析'],
+    resources: [
+      { title: '《How to Draw》Scott Robertson', url: '', type: 'book' },
+      { title: 'B站搜索"场景写生"教程', url: 'https://search.bilibili.com/all?keyword=场景写生+转创作', type: 'video' }
+    ],
+    days: {
+      mon: [
+        { id: 'w1-mon-1', text: '几何形体回顾：球/立方/圆柱/圆锥的透视画法（各画3个不同角度）', duration: '2h' },
+        { id: 'w1-mon-2', text: '写生观察法：选择身边3个物体，用几何体概括其基本形态并画线稿', duration: '2h' },
+        { id: 'w1-mon-3', text: '形体组合练习：将简单几何体组合成复杂形态（10个速写）', duration: '2h' }
+      ],
+      tue: [
+        { id: 'w1-tue-1', text: '从写生到创作（一）：选一张现实场景照片，提取核心形体结构', duration: '2h' },
+        { id: 'w1-tue-2', text: '形体转化练习：将写生稿转化为3种不同风格的设计方案', duration: '2.5h' },
+        { id: 'w1-tue-3', text: '素材整理：建立"形体参考库"文件夹，分类收集优秀造型参考', duration: '1.5h' }
+      ],
+      wed: [
+        { id: 'w1-wed-1', text: '体积感训练：用光影表现球/柱/锥/方的体积（单光源+多光源各一组）', duration: '2h' },
+        { id: 'w1-wed-2', text: '空间感练习：用几何体搭建一个有前后深度的空间场景', duration: '2h' },
+        { id: 'w1-wed-3', text: '分析5张优秀场景原画——标注其基础几何结构', duration: '2h' }
+      ],
+      thu: [
+        { id: 'w1-thu-1', text: '有机形态分析：植物/人体/动物的几何概括方法', duration: '1.5h' },
+        { id: 'w1-thu-2', text: '人造形态分析：建筑/机械/家具的结构逻辑', duration: '1.5h' },
+        { id: 'w1-thu-3', text: '综合练习：画一个包含有机+人造元素的场景线稿（如树屋/洞穴基地）', duration: '3h' }
+      ],
+      fri_am: [
+        { id: 'w1-fri-1', text: '写生速写：出门或对着照片速写1个真实场景并标注形体结构', duration: '1.5h' },
+        { id: 'w1-fri-2', text: '本周总结+作品自评（挑出最满意的3张和最需改进的2张）', duration: '1.5h' }
+      ]
+    },
+    milestone: '完成一套写生→形体分析→创作转化的完整流程作品，能准确概括所见物体的几何结构'
+  },
+  week2: {
+    theme: '建筑设计思路和方法',
+    description: '系统学习不同建筑风格的结构逻辑和空间规划方法',
+    skillsGained: ['建筑风格', '结构逻辑', '空间规划', '细节层次', '建筑写生'],
+    resources: [
+      { title: '《The Urban Sketcher》Marc Taro Holmes', url: '', type: 'book' },
+      { title: 'Pinterest搜索"architecture design sheet"', url: 'https://www.pinterest.com/', type: 'reference' },
+      { title: 'B站搜索"建筑设计思路"', url: 'https://search.bilibili.com/all?keyword=建筑设计思路+场景原画', type: 'video' }
+    ],
+    days: {
+      mon: [
+        { id: 'w2-mon-1', text: '建筑风格系统认识：中式/欧式/现代/科幻 四大类的核心特征对比', duration: '2h' },
+        { id: 'w2-mon-2', text: '练习：每种风格画2个建筑外观速写（8个速写，重在抓特征）', duration: '2h' },
+        { id: 'w2-mon-3', text: '风格融合：尝试将两种风格元素结合（如中式+科幻=赛博中式建筑）', duration: '2h' }
+      ],
+      tue: [
+        { id: 'w2-tue-1', text: '建筑结构逻辑：从功能需求推导空间形态——入口/动线/功能区', duration: '2h' },
+        { id: 'w2-tue-2', text: '练习：设计一个小型建筑（如茶馆/铁匠铺/实验室），画出平面布局+3个外观角度', duration: '2.5h' },
+        { id: 'w2-tue-3', text: '结构合理性检查：标注建筑的受力/采光/通风逻辑', duration: '1.5h' }
+      ],
+      wed: [
+        { id: 'w2-wed-1', text: '空间规划与动线：室内→半室内→室外的过渡关系', duration: '2h' },
+        { id: 'w2-wed-2', text: '练习：设计一个建筑群（3-5栋），画出鸟瞰布局+人视点效果图', duration: '2.5h' },
+        { id: 'w2-wed-3', text: '天际线与建筑节奏：高低错落/疏密对比在建筑群中的应用', duration: '1.5h' }
+      ],
+      thu: [
+        { id: 'w2-thu-1', text: '建筑细节层次：屋顶/窗户/柱子/入口/装饰 的设计语言', duration: '2h' },
+        { id: 'w2-thu-2', text: '近景建筑细节刻画（选一个风格做精细门窗+材质表现）', duration: '2h' },
+        { id: 'w2-thu-3', text: 'LOD策略：同一栋建筑画近/中/远3个距离的细节层级', duration: '2h' }
+      ],
+      fri_am: [
+        { id: 'w2-fri-1', text: '建筑写生：找广州骑楼或现代建筑照片进行结构分析速写', duration: '1.5h' },
+        { id: 'w2-fri-2', text: '本周总结+建筑作品整理（建立建筑参考库）', duration: '1.5h' }
+      ]
+    },
+    milestone: '完成一套建筑设计方案（风格分析→布局规划→外观设计→细节表现），建筑结构合理可信'
+  },
+  week3: {
+    theme: '环境元素解析 + 设计',
+    description: '拆解自然和人工环境元素，学习如何组合设计可信的完整环境生态',
+    skillsGained: ['自然元素', '人工元素', '环境生态', '细节装饰', '组合设计'],
+    resources: [
+      { title: '《The Elements of Landscape》John F. Carlson', url: '', type: 'book' },
+      { title: 'ArtStation搜索"environment design breakdown"', url: 'https://www.artstation.com/', type: 'reference' }
+    ],
+    days: {
+      mon: [
+        { id: 'w3-mon-1', text: '自然元素拆解（一）：岩石的类型化概括——沉积岩/火成岩/变质岩', duration: '2h' },
+        { id: 'w3-mon-2', text: '自然元素拆解（二）：植被的结构化理解——乔木/灌木/草本/藤蔓', duration: '2h' },
+        { id: 'w3-mon-3', text: '自然元素拆解（三）：水体+天空的表现规律', duration: '2h' }
+      ],
+      tue: [
+        { id: 'w3-tue-1', text: '人工元素拆解（一）：道路/桥梁/台阶/坡道的设计逻辑', duration: '2h' },
+        { id: 'w3-tue-2', text: '人工元素拆解（二）：围墙/栅栏/路灯/标识牌/摊位等街道装置', duration: '2h' },
+        { id: 'w3-tue-3', text: '练习：画一条完整的街道截面——包含自然+人工所有元素', duration: '2h' }
+      ],
+      wed: [
+        { id: 'w3-wed-1', text: '元素组合设计（一）：森林生态——树+灌木+岩石+溪流的关系', duration: '2.5h' },
+        { id: 'w3-wed-2', text: '元素组合设计（二）：城市生态——建筑+街道+绿化+装置的关系', duration: '2.5h' },
+        { id: 'w3-wed-3', text: '生态逻辑：不同环境下元素的自然分布规律（干旱/湿润/寒冷/温暖）', duration: '1h' }
+      ],
+      thu: [
+        { id: 'w3-thu-1', text: '生活痕迹设计：如何让环境看起来"有人生活过"——磨损/杂物/植被入侵', duration: '2h' },
+        { id: 'w3-thu-2', text: '故事感营造：一个场景讲一个故事——通过元素组合暗示发生了什么', duration: '2h' },
+        { id: 'w3-thu-3', text: '综合练习：设计一个完整的环境生态场景（如：废弃工厂被自然回收）', duration: '2h' }
+      ],
+      fri_am: [
+        { id: 'w3-fri-1', text: '环境元素速写：30分钟×3张不同生态的快速环境设计', duration: '1.5h' },
+        { id: 'w3-fri-2', text: '本周总结+建立环境元素参考分类库', duration: '1.5h' }
+      ]
+    },
+    milestone: '完成2张完整的环境设计（自然生态+城市生态），元素组合可信，有生活痕迹'
+  },
+  week4: {
+    theme: '构图与透视',
+    description: '系统回顾并整合透视体系和构图法则，构建多角度场景空间能力',
+    skillsGained: ['一点透视', '两点透视', '三点透视', '构图法则', '空间层次', '多角度构建'],
+    resources: [
+      { title: '《Framed Ink》Marcos Mateu-Mestre', url: '', type: 'book' },
+      { title: '《Perspective Made Easy》Ernest Norling', url: '', type: 'book' },
+      { title: 'B站搜索"场景透视构图"', url: 'https://search.bilibili.com/all?keyword=场景透视+构图教学', type: 'video' }
+    ],
+    days: {
+      mon: [
+        { id: 'w4-mon-1', text: '一点透视+两点透视快速回顾（各画3个场景线稿验证理解）', duration: '2h' },
+        { id: 'w4-mon-2', text: '三点透视强化：俯视鸟瞰+仰视仰角——消失点设置技巧', duration: '2h' },
+        { id: 'w4-mon-3', text: '自由透视：在复杂场景中灵活运用多种透视（广角/长焦的透视差异）', duration: '2h' }
+      ],
+      tue: [
+        { id: 'w4-tue-1', text: '构图法则系统回顾：三分法/黄金分割/引导线/框架/对称/对角线', duration: '2h' },
+        { id: 'w4-tue-2', text: '练习：同一个场景用6种不同构图方案（缩略图，每张10分钟）', duration: '2h' },
+        { id: 'w4-tue-3', text: '视觉引导线——如何引导观众视线在画面中游走', duration: '2h' }
+      ],
+      wed: [
+        { id: 'w4-wed-1', text: '黑白灰构成：用3-4个灰阶组织画面层次（10个缩略图练习）', duration: '2h' },
+        { id: 'w4-wed-2', text: '景深与空间层次：前景/中景/远景的组织+大气透视初探', duration: '2h' },
+        { id: 'w4-wed-3', text: '形状设计：大/中/小形状的视觉节奏+正负空间运用', duration: '2h' }
+      ],
+      thu: [
+        { id: 'w4-thu-1', text: '透视+构图综合（一）：室内空间——不同透视下的房间/走廊/大厅', duration: '2.5h' },
+        { id: 'w4-thu-2', text: '透视+构图综合（二）：室外空间——城市街角/自然峡谷/开阔平原', duration: '2.5h' },
+        { id: 'w4-thu-3', text: '多角度挑战：同一个场景从3个不同视角画出来（正视/俯视/侧视）', duration: '1h' }
+      ],
+      fri_am: [
+        { id: 'w4-fri-1', text: '限时构图挑战：30分钟一张完整构图线稿×3张', duration: '1.5h' },
+        { id: 'w4-fri-2', text: '本周总结+构图作品集整理（标注每张的构图策略）', duration: '1.5h' }
+      ]
+    },
+    milestone: '完成15张以上构图练习，同一场景能用3种以上构图方案表达并选出最佳'
+  },
+  week5: {
+    theme: '色彩理解',
+    description: '掌握色温、色彩脚本和大气透视，能用色彩独立表达场景情绪',
+    skillsGained: ['色彩和谐', '色温控制', '色彩脚本', '大气透视', '情绪配色'],
+    resources: [
+      { title: '《Color and Light》James Gurney', url: '', type: 'book' },
+      { title: 'Adobe Color配色工具', url: 'https://color.adobe.com/', type: 'tool' },
+      { title: 'B站搜索"场景色彩教学"', url: 'https://search.bilibili.com/all?keyword=场景色彩+配色方案', type: 'video' }
+    ],
+    days: {
+      mon: [
+        { id: 'w5-mon-1', text: '色轮/色温/饱和度/明度 系统回顾+色彩和谐方案(互补/类似/三角)', duration: '2h' },
+        { id: 'w5-mon-2', text: '色彩方案练习：4种和谐方案各画一张色稿小样', duration: '2h' },
+        { id: 'w5-mon-3', text: '分析5张优秀场景原画的色彩策略（提取主色+辅色+点缀色）', duration: '2h' }
+      ],
+      tue: [
+        { id: 'w5-tue-1', text: '色彩脚本(Color Script)：用颜色序列讲空间情绪变化——选一部动画电影分析', duration: '2h' },
+        { id: 'w5-tue-2', text: '练习：为一个场景设计3种不同情绪的色彩方案（宁静/紧张/悲伤）', duration: '2.5h' },
+        { id: 'w5-tue-3', text: '色温对比：冷暖光在同一个场景中的不同氛围效果', duration: '1.5h' }
+      ],
+      wed: [
+        { id: 'w5-wed-1', text: '大气透视：远景色偏冷/灰/淡——在场景深度中的应用', duration: '2h' },
+        { id: 'w5-wed-2', text: '练习：画一个大景深风景，用大气透视区分5个深度层', duration: '2h' },
+        { id: 'w5-wed-3', text: '不同时间段的色彩：清晨/正午/黄昏/夜晚的光色变化规律', duration: '2h' }
+      ],
+      thu: [
+        { id: 'w5-thu-1', text: '光照方案：日光/月光/烛光/霓虹/火光——不同光源的色温和氛围', duration: '2h' },
+        { id: 'w5-thu-2', text: '练习：同一个场景画3种不同光照版本', duration: '2.5h' },
+        { id: 'w5-thu-3', text: '色彩+光影+构图综合：完成一张完整的色彩场景（不限主题）', duration: '1.5h' }
+      ],
+      fri_am: [
+        { id: 'w5-fri-1', text: '临摹2张电影关键帧——分析其色彩方案并在旁边做配色笔记', duration: '1.5h' },
+        { id: 'w5-fri-2', text: '本周总结+色彩学习笔记整理', duration: '1.5h' }
+      ]
+    },
+    milestone: '同一场景完成3种光照/色彩变体（晨/午/夜），能独立完成场景的色彩方案设计'
+  },
+  week6: {
+    theme: '3D辅助1：Blender基础+场景白模',
+    description: '入门Blender核心操作，能独立搭建简单场景白模并用透视辅助绘画',
+    skillsGained: ['Blender基础', '基础建模', '修改器', '白模搭建', '3D透视验证'],
+    resources: [
+      { title: 'Blender官网下载', url: 'https://www.blender.org/download/', type: 'tool' },
+      { title: 'B站"Blender零基础入门"教程', url: 'https://search.bilibili.com/all?keyword=Blender+零基础+场景建模', type: 'video' },
+      { title: 'Blender Guru 甜甜圈教程（经典入门）', url: 'https://www.youtube.com/@blenderguru', type: 'video' }
+    ],
+    days: {
+      mon: [
+        { id: 'w6-mon-1', text: 'Blender安装+界面认识+基本导航（旋转/平移/缩放/正交/透视切换）', duration: '1.5h' },
+        { id: 'w6-mon-2', text: '基础操作：选择/移动/旋转/缩放/复制/删除——用基础立方体搭一个简单房间', duration: '2h' },
+        { id: 'w6-mon-3', text: '编辑模式入门：顶点/边/面的操作——给房间加门窗', duration: '2.5h' }
+      ],
+      tue: [
+        { id: 'w6-tue-1', text: '基础建模工具：Extrude/Bevel/Loop Cut/Inset——用这些工具建一个桌子+椅子', duration: '2h' },
+        { id: 'w6-tue-2', text: '练习：建一套简单家具（书架/床/柜子）', duration: '2h' },
+        { id: 'w6-tue-3', text: '比例与尺度：在Blender中设置参考图+正确比例建模', duration: '2h' }
+      ],
+      wed: [
+        { id: 'w6-wed-1', text: '修改器基础（一）：Mirror镜像/Array阵列/Screw螺旋——快速生成重复结构', duration: '2h' },
+        { id: 'w6-wed-2', text: '修改器基础（二）：Subdivision Surface细分/Boolean布尔/Solidify实体化', duration: '2h' },
+        { id: 'w6-wed-3', text: '练习：用修改器快速建一个旋转楼梯+柱廊', duration: '2h' }
+      ],
+      thu: [
+        { id: 'w6-thu-1', text: '场景白模搭建（一）：规划场景布局——在Blender中放置基础体块', duration: '2h' },
+        { id: 'w6-thu-2', text: '场景白模搭建（二）：细化建筑体块+环境地形', duration: '2h' },
+        { id: 'w6-thu-3', text: '场景白模搭建（三）：添加细节体块+调整构图相机', duration: '2h' }
+      ],
+      fri_am: [
+        { id: 'w6-fri-1', text: '渲染白模+导出图片→导入PS/纸上验证透视→标注修正意见', duration: '1.5h' },
+        { id: 'w6-fri-2', text: '本周总结+整理Blender快捷操作笔记', duration: '1.5h' }
+      ]
+    },
+    milestone: '独立完成一个简单室内场景的完整白模（从零搭建→相机设置→渲染导出→透视验证）'
+  },
+  week7: {
+    theme: '3D辅助2：灯光材质渲染',
+    description: '掌握Blender灯光系统和PBR材质，能渲染有质感的场景辅助绘画',
+    skillsGained: ['Blender灯光', '三点布光', 'PBR材质', '原理化BSDF', 'Cycles渲染'],
+    resources: [
+      { title: 'Blender官方材质教程', url: 'https://docs.blender.org/manual/en/latest/render/shader_nodes/', type: 'reference' },
+      { title: 'B站"Blender灯光材质"教程', url: 'https://search.bilibili.com/all?keyword=Blender+灯光+材质+渲染', type: 'video' },
+      { title: 'Poly Haven免费PBR贴图', url: 'https://polyhaven.com/', type: 'tool' }
+    ],
+    days: {
+      mon: [
+        { id: 'w7-mon-1', text: 'Blender灯光系统：Point/Sun/Spot/Area四种灯光的特性与应用场景', duration: '2h' },
+        { id: 'w7-mon-2', text: '练习：用不同灯光类型给上周的白模场景打光（4种灯光各做一版）', duration: '2h' },
+        { id: 'w7-mon-3', text: '灯光参数深入：强度/颜色/衰减/阴影——如何控制光的质感', duration: '2h' }
+      ],
+      tue: [
+        { id: 'w7-tue-1', text: '三点布光在3D中的应用：Key Light/Fill Light/Rim Light的设置', duration: '2h' },
+        { id: 'w7-tue-2', text: '练习：用三点布光给白模场景做3种不同氛围（明亮/神秘/恐怖）', duration: '2.5h' },
+        { id: 'w7-tue-3', text: 'HDRI环境光照：使用HDRI贴图快速获得真实环境光', duration: '1.5h' }
+      ],
+      wed: [
+        { id: 'w7-wed-1', text: 'PBR材质基础：原理化BSDF节点——Base Color/Roughness/Metalic/Normal', duration: '2h' },
+        { id: 'w7-wed-2', text: '练习：创建5种基础材质球（木材/金属/石材/玻璃/布料）', duration: '2h' },
+        { id: 'w7-wed-3', text: 'UV展开基础：如何给模型正确展开UV让贴图不变形', duration: '2h' }
+      ],
+      thu: [
+        { id: 'w7-thu-1', text: 'Cycles渲染器基础：采样/降噪/光线追踪参数设置', duration: '2h' },
+        { id: 'w7-thu-2', text: '渲染输出设置：分辨率/文件格式/色彩管理/AOV分层渲染', duration: '2h' },
+        { id: 'w7-thu-3', text: '练习：给上周白模场景上材质+打光→渲染出一张完整图', duration: '2h' }
+      ],
+      fri_am: [
+        { id: 'w7-fri-1', text: '渲染→导出PS→对比纯手绘版本分析差异和辅助效果', duration: '1.5h' },
+        { id: 'w7-fri-2', text: '本周总结+灯光材质参数笔记', duration: '1.5h' }
+      ]
+    },
+    milestone: '用Blender完成一个有材质有灯光的场景渲染图，能分析3D渲染对绘画的辅助价值'
+  },
+  week8: {
+    theme: '3D辅助3：复杂场景构建',
+    description: '掌握LOD策略和资产管理，能高效搭建中大型3D场景辅助概念设计',
+    skillsGained: ['LOD策略', '资产库管理', '场景组装', '多角度构图', '复杂场景'],
+    resources: [
+      { title: 'Kitbash3D资产参考', url: 'https://kitbash3d.com/', type: 'reference' },
+      { title: 'Sketchfab免费3D模型', url: 'https://sketchfab.com/', type: 'tool' },
+      { title: 'B站"Blender场景搭建"教程', url: 'https://search.bilibili.com/all?keyword=Blender+场景搭建+概念设计', type: 'video' }
+    ],
+    days: {
+      mon: [
+        { id: 'w8-mon-1', text: '细节层级(LOD)策略：远/中/近景在3D中的不同精度要求', duration: '2h' },
+        { id: 'w8-mon-2', text: '练习：同一个建筑做高/中/低3个精度版本', duration: '2h' },
+        { id: 'w8-mon-3', text: '代理物体：用简单几何体替代复杂模型快速布局场景', duration: '2h' }
+      ],
+      tue: [
+        { id: 'w8-tue-1', text: '资产库建立：Kitbash思路——将常用元素保存为可复用资产', duration: '2h' },
+        { id: 'w8-tue-2', text: '练习：建立个人场景资产库（至少15个基础元素：门窗/柱子/屋顶/台阶/树木/石头）', duration: '2.5h' },
+        { id: 'w8-tue-3', text: '资源管理：Blender的Asset Browser使用+外部模型导入', duration: '1.5h' }
+      ],
+      wed: [
+        { id: 'w8-wed-1', text: '场景组装（一）：用代理物体快速布局建筑群+自然地形', duration: '2.5h' },
+        { id: 'w8-wed-2', text: '场景组装（二）：逐步替换代理物体为详细资产', duration: '2.5h' },
+        { id: 'w8-wed-3', text: '场景优化：面数控制/实例化复制/集合管理——让复杂场景不卡顿', duration: '1h' }
+      ],
+      thu: [
+        { id: 'w8-thu-1', text: '多角度构图：在3D场景中设置5个不同角度的相机探索最佳构图', duration: '2h' },
+        { id: 'w8-thu-2', text: '每个角度调不同焦距（广角18mm→长焦200mm）感受空间差异', duration: '2h' },
+        { id: 'w8-thu-3', text: '选出最佳2个角度渲染+灯光微调', duration: '2h' }
+      ],
+      fri_am: [
+        { id: 'w8-fri-1', text: '2个最佳角度导出→PS做快速overpaint验证可行性', duration: '1.5h' },
+        { id: 'w8-fri-2', text: '本周总结+整理个人资产库', duration: '1.5h' }
+      ]
+    },
+    milestone: '独立搭建一个中大型场景（建筑群+自然环境），从多个角度渲染并选出最佳构图'
+  },
+  week9: {
+    theme: '3D Coat辅助',
+    description: '入门3D Coat的雕刻和纹理功能，补全3D辅助工作流的有机形态短板',
+    skillsGained: ['体素雕刻', '有机形态', '重拓扑', 'UV展开', '纹理绘制'],
+    resources: [
+      { title: '3D Coat官网', url: 'https://3dcoat.com/', type: 'tool' },
+      { title: 'B站"3D Coat入门"教程', url: 'https://search.bilibili.com/all?keyword=3D+Coat+入门+教程', type: 'video' }
+    ],
+    days: {
+      mon: [
+        { id: 'w9-mon-1', text: '3D Coat界面认识+体素(Voxel)雕刻基础概念——与Blender雕刻的区别', duration: '2h' },
+        { id: 'w9-mon-2', text: '基础雕刻笔刷练习：Clay/Scrape/Smooth/Move/Cut——雕一个简单石头', duration: '2h' },
+        { id: 'w9-mon-3', text: '练习：雕刻一组岩石（3块不同形状+风化细节）', duration: '2h' }
+      ],
+      tue: [
+        { id: 'w9-tue-1', text: '有机形态雕刻（一）：地形生成——山脉/峡谷/洞穴的基本雕刻方法', duration: '2h' },
+        { id: 'w9-tue-2', text: '有机形态雕刻（二）：树根/藤蔓/蘑菇等自然有机物的雕刻', duration: '2.5h' },
+        { id: 'w9-tue-3', text: '练习：雕刻一个自然场景的地形基底（含岩石+地形起伏）', duration: '1.5h' }
+      ],
+      wed: [
+        { id: 'w9-wed-1', text: '重拓扑(Retopology)基础：高模→低模的优化流程和工具', duration: '2h' },
+        { id: 'w9-wed-2', text: '练习：给上周雕刻的岩石做重拓扑优化面数', duration: '2h' },
+        { id: 'w9-wed-3', text: '自动+手动重拓扑结合策略', duration: '2h' }
+      ],
+      thu: [
+        { id: 'w9-thu-1', text: 'UV展开基础：在3D Coat中展开雕刻模型的UV', duration: '2h' },
+        { id: 'w9-thu-2', text: '纹理绘制(PBR Painting)：在3D Coat中直接绘制颜色/粗糙度/法线贴图', duration: '2.5h' },
+        { id: 'w9-thu-3', text: '完整流程：雕刻→重拓扑→展UV→画纹理→导出到Blender', duration: '1.5h' }
+      ],
+      fri_am: [
+        { id: 'w9-fri-1', text: '将3D Coat导出的模型放入Blender场景中+打光渲染测试', duration: '1.5h' },
+        { id: 'w9-fri-2', text: '本周总结+Blender↔3D Coat工作流笔记', duration: '1.5h' }
+      ]
+    },
+    milestone: '用3D Coat完成一个有机形态资产（岩石/地形/植被）并成功导入Blender使用'
+  },
+  week10: {
+    theme: '素材应用+3D综合工作流',
+    description: '整合Photobashing与3D工作流，建立高效的3D+2D混合创作流程',
+    skillsGained: ['Photobashing', '3D+2D混合', 'PS后期', '资产复用', '效率工作流'],
+    resources: [
+      { title: 'Photoshop/Procreate', url: '', type: 'tool' },
+      { title: 'Texture.com免费贴图', url: 'https://www.textures.com/', type: 'tool' },
+      { title: 'B站"概念设计工作流"', url: 'https://search.bilibili.com/all?keyword=概念设计+3D+2D+工作流', type: 'video' }
+    ],
+    days: {
+      mon: [
+        { id: 'w10-mon-1', text: 'Photobashing技巧（一）：快速选图+变形+调色——将照片融入画面', duration: '2h' },
+        { id: 'w10-mon-2', text: 'Photobashing技巧（二）：纹理叠加+细节增强——用照片丰富材质表现', duration: '2h' },
+        { id: 'w10-mon-3', text: '贴图伦理：合理参考vs过度依赖——如何保持原创性', duration: '2h' }
+      ],
+      tue: [
+        { id: 'w10-tue-1', text: '完整3D+2D工作流演示：白模→渲染→PS overpaint→Photobash→最终成品', duration: '2h' },
+        { id: 'w10-tue-2', text: '练习：跟做一遍完整流程（选之前做过的3D场景渲染图）', duration: '3h' },
+        { id: 'w10-tue-3', text: '记录流程各环节时间，找出自己的效率瓶颈', duration: '1h' }
+      ],
+      wed: [
+        { id: 'w10-wed-1', text: '3D+手绘混合（一）：3D只做基础透视+光影→手绘刻画细节+气氛', duration: '2.5h' },
+        { id: 'w10-wed-2', text: '3D+手绘混合（二）：3D做中远景+手绘画近景焦点区域', duration: '2.5h' },
+        { id: 'w10-wed-3', text: '练习：用混合流程完成一张场景', duration: '1h' }
+      ],
+      thu: [
+        { id: 'w10-thu-1', text: '资产复用策略：建立个人3D素材库+模板场景', duration: '2h' },
+        { id: 'w10-thu-2', text: '练习：用已有资产库快速搭建3个不同风格的场景白模（每个<1小时）', duration: '3h' },
+        { id: 'w10-thu-3', text: '效率优化：快捷键/脚本/插件——减少重复操作', duration: '1h' }
+      ],
+      fri_am: [
+        { id: 'w10-fri-1', text: '限时挑战：2.5小时内完成从零到概念图的全流程', duration: '2h' },
+        { id: 'w10-fri-2', text: '流程复盘+本周总结+效率改进笔记', duration: '1h' }
+      ]
+    },
+    milestone: '使用3D+2D混合工作流独立完成一张场景概念设计，效率比纯手绘有明显提升'
+  },
+  week11: {
+    theme: '世界观场景草图+单体设计',
+    description: '从世界观构建出发，完成场景草图探索和单体道具设计',
+    skillsGained: ['世界观构建', '情绪板', '场景草图', '单体设计', '设计简报'],
+    resources: [
+      { title: 'ArtStation 概念设计作品集参考', url: 'https://www.artstation.com/', type: 'reference' },
+      { title: 'PureRef参考图管理工具', url: 'https://www.pureref.com/', type: 'tool' },
+      { title: 'B站"世界观设计"', url: 'https://search.bilibili.com/all?keyword=世界观+场景概念设计', type: 'video' }
+    ],
+    days: {
+      mon: [
+        { id: 'w11-mon-1', text: '世界观构建：从文字描述到视觉方向——确定风格/时代/文化/技术水平', duration: '2h' },
+        { id: 'w11-mon-2', text: '情绪板(Mood Board)制作：围绕世界观收集整理视觉参考', duration: '2h' },
+        { id: 'w11-mon-3', text: '3D辅助：在Blender中快速搭建世界观场景的基础地形', duration: '2h' }
+      ],
+      tue: [
+        { id: 'w11-tue-1', text: '场景草图爆发：围绕世界观出15+构图缩略图（可用3D辅助快速出多角度）', duration: '3h' },
+        { id: 'w11-tue-2', text: '从15张中精选3个最优方向做更详细的黑白灰方案', duration: '2h' },
+        { id: 'w11-tue-3', text: '最终选定1个方向做完整设计规划', duration: '1h' }
+      ],
+      wed: [
+        { id: 'w11-wed-1', text: '单体道具设计：分析世界观中需要的核心物件（武器/载具/装置/家具）', duration: '2h' },
+        { id: 'w11-wed-2', text: '单体设计练习：设计3个符合世界观的单体道具', duration: '2h' },
+        { id: 'w11-wed-3', text: '3D辅助单体：在Blender中建一个单体道具白模验证透视和比例', duration: '2h' }
+      ],
+      thu: [
+        { id: 'w11-thu-1', text: '场景+单体整合：将设计的单体放入场景中——调整尺度/位置/疏密', duration: '2.5h' },
+        { id: 'w11-thu-2', text: '整体色彩脚本：为整合后的场景做3个色彩方案', duration: '2h' },
+        { id: 'w11-thu-3', text: '准备下周最终项目的完整Brief+参考素材包', duration: '1.5h' }
+      ],
+      fri_am: [
+        { id: 'w11-fri-1', text: '方案自评：对照设计目标逐项打分+选出最终作品集方向', duration: '1.5h' },
+        { id: 'w11-fri-2', text: '本周总结+下周创作计划制定', duration: '1.5h' }
+      ]
+    },
+    milestone: '完成一整套世界观场景设计方案（情绪板→15+草图→3选1深化→单体设计→整合方案）'
+  },
+  week12: {
+    theme: '细化+物件氛围+综合项目',
+    description: '综合运用12周所学，用3D+2D混合工作流完成一张作品集级场景概念设计',
+    skillsGained: ['全流程', '物件氛围', '细节打磨', '作品集输出', '综合应用'],
+    resources: [
+      { title: '全部12周学习资料综合运用', url: '', type: 'all' },
+      { title: 'ArtStation作品集参考（行业标准）', url: 'https://www.artstation.com/', type: 'reference' }
+    ],
+    days: {
+      mon: [
+        { id: 'w12-mon-1', text: '最终项目启动：确定选题+3D白模搭建（用已有资产库快速搭建基础场景）', duration: '3h' },
+        { id: 'w12-mon-2', text: '相机设置+多角度探索→选定最终构图镜头', duration: '2h' },
+        { id: 'w12-mon-3', text: '灯光方案：在Blender中做好灯光+初步材质', duration: '1h' }
+      ],
+      tue: [
+        { id: 'w12-tue-1', text: '3D渲染输出：高清渲染+分层(AOV)输出到PS', duration: '2h' },
+        { id: 'w12-tue-2', text: 'PS后期处理：overpaint+Photobash+气氛强化', duration: '2.5h' },
+        { id: 'w12-tue-3', text: '手绘细化：在3D基底上手工刻画关键区域的细节', duration: '1.5h' }
+      ],
+      wed: [
+        { id: 'w12-wed-1', text: '物件氛围（一）：画面中的中小型物件添加——让场景有生活感和故事', duration: '3h' },
+        { id: 'w12-wed-2', text: '物件氛围（二）：道具/植被/碎片/灰尘/光效——细节让场景"活起来"', duration: '3h' }
+      ],
+      thu: [
+        { id: 'w12-thu-1', text: '全局调整：色彩平衡/对比度/锐度/景深效果', duration: '2h' },
+        { id: 'w12-thu-2', text: '细节打磨：逐区域检查——材质/光影/透视/比例 是否有问题', duration: '2h' },
+        { id: 'w12-thu-3', text: '作品集排版：过程图(草图→3D白模→渲染→后期→成品)+设计说明', duration: '2h' }
+      ],
+      fri_am: [
+        { id: 'w12-fri-1', text: '自我评审：对照设计Brief逐项打分+记录可改进点', duration: '1.5h' },
+        { id: 'w12-fri-2', text: '12周学习总结：整理所有作品→对比第1周和第12周的进步→制定下一步学习方向', duration: '1.5h' }
+      ]
+    },
+    milestone: '完成一张使用3D+2D混合工作流的作品集级场景概念设计，记录完整创作过程'
+  }
+};
+
+// ==================== 常量和配置 ====================
+const STORAGE_KEY = 'scene_concept_state';
+const STORAGE_VERSION = 1;
+const LEARNING_DAYS = ['mon', 'tue', 'wed', 'thu', 'fri_am'];
+const DAY_LABELS = { mon: '周一', tue: '周二', wed: '周三', thu: '周四', fri_am: '周五上午', sat: '周六（暑假学习日）', sun: '周日（暑假学习日）' };
+const TOTAL_WEEKS = 12;
+const TOTAL_LEARNING_DAYS = TOTAL_WEEKS * 5; // 60 learning days
+
+// ==================== 默认状态 ====================
+function getDefaultState() {
+  const today = dateStr(new Date());
+  return {
+    version: STORAGE_VERSION,
+    completedTasks: {},       // { "YYYY-MM-DD": ["taskId1", ...] }
+    partialCompletions: {},   // { taskId: { pct: number, note: string } }
+    microStepCompletions: {}, // { "taskId": ["step0","step1",...] } — v2: micro-step tracking
+    currentWeekOverride: null, // null = auto-calculate from calendar
+    startedAt: null,          // ISO date string, set when user confirms start
+    pausedWeeks: [],          // [2, 5] = weeks 2 and 5 paused
+    penaltyBalance: 0,
+    penaltyPerMissedDay: 10,  // CNY
+    penaltyHistory: [],       // [{ date, amount, reason }]
+    reminderTime: '09:00',
+    reminderEnabled: true,
+    currentStreak: 0,
+    longestStreak: 0,
+    totalCompletedDays: 0,
+    lastActiveDate: today,
+    weekCompletions: {},      // { "1": true, "2": true } weeks fully completed
+    // v2 — 拖延症行为科学新增字段
+    dailyCommitment: {},      // { "YYYY-MM-DD": { time:"09:00", place:"书房", fulfilled:false } }
+    moodLog: {},              // { "YYYY-MM-DD": { mood:"tired", timestamp:"" } }
+    procrastinationReasons: {}, // { "YYYY-MM-DD": { reason:"too_hard", note:"" } }
+    weeklyReflections: {},    // { "week3": { achievement:"...", difficulty:"...", adjust:"..." } }
+    // v2.1 — 渐进式节奏校准
+    rhythmPhase: 1,           // 1-4，当前校准阶段
+    rhythmStartDate: null,    // ISO date，开始校准的日期
+    // v2.2 — 暑假模式
+    summerMode: 'auto',       // 'auto' | 'on' | 'off'
+    summerStart: '2026-07-06',
+    summerEnd: '2026-08-16',
+  };
+}
+
+// ==================== 状态管理 ====================
+let state = getDefaultState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      // Merge with defaults to handle version migrations
+      state = { ...getDefaultState(), ...parsed };
+      // Ensure nested objects exist
+      state.completedTasks = state.completedTasks || {};
+      state.microStepCompletions = state.microStepCompletions || {};
+      state.penaltyHistory = state.penaltyHistory || [];
+      state.pausedWeeks = state.pausedWeeks || [];
+      state.weekCompletions = state.weekCompletions || {};
+      state.dailyCommitment = state.dailyCommitment || {};
+      state.moodLog = state.moodLog || {};
+      state.procrastinationReasons = state.procrastinationReasons || {};
+      state.weeklyReflections = state.weeklyReflections || {};
+      state.rhythmPhase = state.rhythmPhase || 1;
+      state.rhythmStartDate = state.rhythmStartDate || null;
+      state.summerMode = state.summerMode || 'auto';
+      state.summerStart = state.summerStart || '2026-07-06';
+      state.summerEnd = state.summerEnd || '2026-08-16';
+    }
+  } catch (e) {
+    console.warn('Failed to load state, using defaults:', e);
+    state = getDefaultState();
+  }
+}
+
+function saveState() {
+  try {
+    state.lastActiveDate = dateStr(new Date());
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    showToast('存储空间不足，请导出数据后清理', 'error');
+    console.error('Failed to save state:', e);
+  }
+}
+
+// ==================== 日期工具 ====================
+function dateStr(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function parseDate(str) {
+  const [y, m, d] = str.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function getDayOfWeek(d) {
+  // 0=Sun, 1=Mon, ..., 6=Sat
+  return d.getDay();
+}
+
+function isWeekend(d) {
+  const dow = getDayOfWeek(d);
+  // Fri PM (after 12pm), Sat, Sun are non-learning days
+  // We simplify: Fri is a learning day (fri_am), Sat/Sun are off
+  return dow === 0 || dow === 6; // Sunday or Saturday
+}
+
+function isFriday(d) {
+  return getDayOfWeek(d) === 5;
+}
+
+// --- 暑假模式判定 ---
+function isSummerMode() {
+  if (state.summerMode === 'on') return true;
+  if (state.summerMode === 'off') return false;
+  // 'auto': check date range
+  const today = dateStr(new Date());
+  return today >= state.summerStart && today <= state.summerEnd;
+}
+
+function isLearningDay(d) {
+  const dow = getDayOfWeek(d);
+  if (isSummerMode()) {
+    // 暑假：周六+周日是学习日
+    return dow === 0 || dow === 6;
+  }
+  // 平时：周一~周五是学习日
+  return dow >= 1 && dow <= 5;
+}
+
+function getDayKey(d) {
+  const dow = getDayOfWeek(d);
+  if (isSummerMode()) {
+    if (dow === 6) return 'sat';   // 周六
+    if (dow === 0) return 'sun';   // 周日
+    return null;
+  }
+  if (dow === 5) return 'fri_am'; // Friday
+  if (dow === 1) return 'mon';
+  if (dow === 2) return 'tue';
+  if (dow === 3) return 'wed';
+  if (dow === 4) return 'thu';
+  return null; // weekend
+}
+
+// ==================== 学习日计算 ====================
+function getLearningDaysSinceStart() {
+  if (!state.startedAt) return 0;
+  const start = parseDate(state.startedAt);
+  const today = new Date();
+  let count = 0;
+  let cursor = new Date(start);
+  while (dateStr(cursor) <= dateStr(today)) {
+    if (isLearningDay(cursor)) {
+      // Check if this day falls in a paused week
+      const weekNum = getWeekForDate(cursor);
+      if (!state.pausedWeeks.includes(weekNum)) {
+        count++;
+      }
+    }
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return count;
+}
+
+function getWeekForDate(d) {
+  // Calculate calendar week based on ALL learning days since start (ignoring pauses).
+  // Pausing only affects whether tasks are due — not which week a calendar date belongs to.
+  if (!state.startedAt) return 1;
+  const start = parseDate(state.startedAt);
+  let allLearningDays = 0;
+  let cursor = new Date(start);
+  const target = dateStr(d);
+  while (dateStr(cursor) <= target) {
+    if (isLearningDay(cursor)) {
+      allLearningDays++;
+    }
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  if (allLearningDays <= 0) return 1;
+  const week = Math.floor((allLearningDays - 1) / 5) + 1;
+  return Math.max(1, Math.min(TOTAL_WEEKS, week));
+}
+
+function getCurrentWeek() {
+  if (state.currentWeekOverride !== null) {
+    return state.currentWeekOverride;
+  }
+  if (!state.startedAt) return 1;
+  const learningDays = getLearningDaysSinceStart();
+  if (learningDays <= 0) return 1;
+  const week = Math.floor((learningDays - 1) / 5) + 1;
+  return Math.min(TOTAL_WEEKS, Math.max(1, week));
+}
+
+function getCurrentDayKey() {
+  const today = new Date();
+  const dow = getDayOfWeek(today);
+  if (dow === 0 || dow === 6) return null; // weekend
+  return dow === 5 ? 'fri_am' : ['', 'mon', 'tue', 'wed', 'thu', 'fri_am', ''][dow];
+}
+
+function getLearningDayForDate(d) {
+  if (!state.startedAt) return null;
+  if (!isLearningDay(d)) return null;
+  const week = getWeekForDate(d);
+  if (state.pausedWeeks.includes(week)) return null;
+  const dayKey = getDayKey(d);
+  if (!dayKey) return null;
+  return { week, dayKey };
+}
+
+function getTodayLearningDay() {
+  const today = new Date();
+  return getLearningDayForDate(today);
+}
+
+// 暑假周末获取合并任务
+function getSummerDayTasks(weekNum, dayKey) {
+  const week = LEARNING_PLAN['week' + weekNum];
+  if (!week) return [];
+  if (dayKey === 'sat') {
+    // 周六：合并周一+周二的任务
+    return [...(week.days.mon || []), ...(week.days.tue || [])];
+  }
+  if (dayKey === 'sun') {
+    // 周日：合并周三+周四的任务
+    return [...(week.days.wed || []), ...(week.days.thu || [])];
+  }
+  return week.days[dayKey] || [];
+}
+
+// ==================== 任务完成 ====================
+function isTaskCompleted(taskId, date) {
+  const d = date || dateStr(new Date());
+  return (state.completedTasks[d] || []).includes(taskId);
+}
+
+function toggleTask(taskId) {
+  const today = dateStr(new Date());
+  if (!state.completedTasks[today]) {
+    state.completedTasks[today] = [];
+  }
+  const idx = state.completedTasks[today].indexOf(taskId);
+  if (idx >= 0) {
+    state.completedTasks[today].splice(idx, 1);
+  } else {
+    state.completedTasks[today].push(taskId);
+    // Haptic feedback if available
+    if (navigator.vibrate) {
+      navigator.vibrate(10);
+    }
+  }
+  updateWeekCompletion();
+  updateStats();
+  saveState();
+}
+
+function getDayCompletion(weekNum, dayKey, date) {
+  const week = LEARNING_PLAN['week' + weekNum];
+  if (!week) return { completed: 0, total: 0, pct: 0 };
+  const tasks = week.days[dayKey] || [];
+  const d = date || dateStr(new Date());
+  const completed = tasks.filter(t => isTaskCompleted(t.id, d)).length;
+  return {
+    completed,
+    total: tasks.length,
+    pct: tasks.length > 0 ? Math.round((completed / tasks.length) * 100) : 0
+  };
+}
+
+function getWeekCompletion(weekNum) {
+  const week = LEARNING_PLAN['week' + weekNum];
+  if (!week) return { completed: 0, total: 0, pct: 0 };
+  let completed = 0, total = 0;
+  for (const dayKey of LEARNING_DAYS) {
+    const tasks = week.days[dayKey] || [];
+    total += tasks.length;
+    // Count completions across all dates (user may have done tasks on different days)
+    for (const task of tasks) {
+      if (Object.values(state.completedTasks).some(arr => arr.includes(task.id))) {
+        completed++;
+      }
+    }
+  }
+  return {
+    completed,
+    total,
+    pct: total > 0 ? Math.round((completed / total) * 100) : 0
+  };
+}
+
+function updateWeekCompletion() {
+  for (let w = 1; w <= TOTAL_WEEKS; w++) {
+    const comp = getWeekCompletion(w);
+    if (comp.pct === 100 && comp.total > 0) {
+      state.weekCompletions[w] = true;
+    }
+  }
+}
+
+// ==================== Streak 计算 ====================
+function updateStats() {
+  // Calculate streak
+  let streak = 0;
+  const today = new Date();
+  let cursor = new Date(today);
+
+  // If today is a learning day and has completions, count it
+  // Otherwise start checking from yesterday
+  const todayStr = dateStr(today);
+  const todayCompletions = state.completedTasks[todayStr] || [];
+  if (isLearningDay(today) && todayCompletions.length > 0) {
+    streak = 1;
+    cursor.setDate(cursor.getDate() - 1);
+  } else {
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  // Walk backwards
+  while (true) {
+    if (!isLearningDay(cursor)) {
+      cursor.setDate(cursor.getDate() - 1);
+      continue;
+    }
+    const ds = dateStr(cursor);
+    const comps = state.completedTasks[ds] || [];
+    if (comps.length > 0) {
+      streak++;
+      cursor.setDate(cursor.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  state.currentStreak = streak;
+  if (streak > state.longestStreak) {
+    state.longestStreak = streak;
+  }
+
+  // Count total completed days
+  let totalDays = 0;
+  for (const [date, tasks] of Object.entries(state.completedTasks)) {
+    const d = parseDate(date);
+    if (isLearningDay(d) && tasks.length > 0) {
+      totalDays++;
+    }
+  }
+  state.totalCompletedDays = totalDays;
+}
+
+// ==================== 惩罚系统 ====================
+function checkMissedYesterday() {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  if (!isLearningDay(yesterday)) return null;
+
+  const yd = getLearningDayForDate(yesterday);
+  if (!yd) return null;
+
+  const comp = getDayCompletion(yd.week, yd.dayKey, dateStr(yesterday));
+  if (comp.pct < 100) {
+    // Check if penalty already applied for this date
+    const yesterdayStr = dateStr(yesterday);
+    const alreadyPenalized = state.penaltyHistory.some(p => p.date === yesterdayStr);
+    if (!alreadyPenalized) {
+      const missedCount = comp.total - comp.completed;
+      const amount = state.penaltyPerMissedDay;
+      state.penaltyBalance += amount;
+      state.penaltyHistory.push({
+        date: yesterdayStr,
+        amount: amount,
+        reason: `缺勤 ${yd.week}周${DAY_LABELS[yd.dayKey]}：${missedCount}/${comp.total} 项任务未完成`
+      });
+      saveState();
+      return {
+        date: yesterdayStr,
+        week: yd.week,
+        dayKey: yd.dayKey,
+        missedCount,
+        totalCount: comp.total,
+        amount
+      };
+    }
+  }
+  return null;
+}
+
+// ==================== Toast 通知 ====================
+function showToast(msg, type = 'warn', duration = 3000) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.3s';
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+// ==================== Modal ====================
+function showModal(title, bodyHtml, actions) {
+  const container = document.getElementById('modal-container');
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal-sheet">
+      <h3>${title}</h3>
+      <div>${bodyHtml}</div>
+      <div class="btn-row">${actions.map((a, i) =>
+        `<button class="btn ${a.cls || 'btn-primary'}" data-action="${i}">${a.label}</button>`
+      ).join('')}</div>
+    </div>
+  `;
+  container.appendChild(overlay);
+
+  return new Promise((resolve) => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.remove();
+        resolve(-1);
+      }
+    });
+    overlay.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.action);
+        overlay.remove();
+        resolve(idx);
+      });
+    });
+  });
+}
+
+// ==================== 庆祝动画 ====================
+function celebrate() {
+  const container = document.getElementById('confetti-container');
+  const colors = ['#e8a850', '#f5d78c', '#4ecca3', '#e74c3c', '#f0c040', '#6ee7c0', '#ff6b6b', '#ffd93d'];
+  for (let i = 0; i < 50; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.top = -(Math.random() * 40 + 10) + 'px';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 0.6 + 's';
+    piece.style.animationDuration = (Math.random() * 1 + 1.5) + 's';
+    container.appendChild(piece);
+    setTimeout(() => piece.remove(), 2000);
+  }
+}
+
+// ==================== 通知系统 ====================
+function requestNotificationPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+
+function scheduleReminder() {
+  if (!state.reminderEnabled) return;
+
+  const [h, m] = state.reminderTime.split(':').map(Number);
+  const now = new Date();
+  const target = new Date(now);
+  target.setHours(h, m, 0, 0);
+
+  if (target <= now) {
+    target.setDate(target.getDate() + 1);
+  }
+
+  const delay = target - now;
+
+  // Schedule notification
+  setTimeout(() => {
+    const today = new Date();
+    if (!isLearningDay(today)) return;
+
+    const tld = getTodayLearningDay();
+    if (!tld) return;
+
+    const week = LEARNING_PLAN['week' + tld.week];
+    if (!week) return;
+
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('🎨 场景原画时间到了！', {
+        body: `今天是${DAY_LABELS[tld.dayKey]}，${week.theme}的学习任务等待完成`,
+        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🎨</text></svg>',
+        tag: 'scene-practice-reminder',
+        requireInteraction: true,
+      });
+    }
+
+    // Schedule next day's reminder
+    scheduleReminder();
+  }, delay);
+}
+
+// ==================== 今日视图渲染 ====================
+function renderToday() {
+  const container = document.getElementById('today-content');
+  const today = new Date();
+  const todayStr = dateStr(today);
+
+  if (!state.startedAt) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🚀</div>
+        <p style="font-size:1rem;font-weight:600;color:var(--text-primary);">准备开始你的场景原画之旅</p>
+        <p style="margin-top:8px;">12周系统学习计划已就绪<br>从透视基础到作品集产出</p>
+        <button class="btn btn-primary" style="margin-top:20px;" onclick="startPlan()">
+          📅 设定开始日期，立即启程
+        </button>
+      </div>
+      ${renderDailyRhythm()}
+    `;
+    return;
+  }
+
+  // Check if today is a learning day
+  const tld = getTodayLearningDay();
+
+  if (!tld) {
+    const nextLearningDay = getNextLearningDay();
+    container.innerHTML = `
+      <div class="streak-bar">
+        <div class="streak-item">
+          <div class="streak-value">${state.currentStreak}</div>
+          <div class="streak-label">当前连续天数</div>
+        </div>
+        <div class="streak-divider"></div>
+        <div class="streak-item">
+          <div class="streak-value">${state.longestStreak}</div>
+          <div class="streak-label">最长连续记录</div>
+        </div>
+        <div class="streak-divider"></div>
+        <div class="streak-item">
+          <div class="streak-value">${state.totalCompletedDays}</div>
+          <div class="streak-label">累计完成天数</div>
+        </div>
+      </div>
+      <div class="card" style="text-align:center;padding:32px 16px;">
+        <div style="font-size:3rem;margin-bottom:12px;">😌</div>
+        <p style="font-size:1rem;font-weight:600;color:var(--text-primary);">${isSummerMode() && !isWeekend(today) ? '今天是教学工作日 ☀️' : '今天是休息日'}</p>
+        <p style="font-size:0.85rem;color:var(--text-secondary);margin-top:8px;">
+          ${isSummerMode() && !isWeekend(today) ? '暑假周一~周五全天教学，周六日集中学习' : isWeekend(today) ? '周末是教学工作时间，好好休息' : '今天没有学习任务安排'}
+        </p>
+        ${nextLearningDay ? `
+        <p style="font-size:0.8rem;color:var(--accent);margin-top:12px;">
+          下一个学习日：${nextLearningDay.label}（第${nextLearningDay.week}周 · ${nextLearningDay.theme}）
+        </p>` : `
+        <p style="font-size:0.8rem;color:var(--accent);margin-top:12px;">
+          🎉 12周计划已全部完成！
+        </p>`}
+      </div>
+      ${renderDailyRhythm()}
+    `;
+    return;
+  }
+
+  const week = LEARNING_PLAN['week' + tld.week];
+  if (!week) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">🎉</div><p>12周计划已全部完成！<br>恭喜你完成了场景原画系统学习</p></div>${renderDailyRhythm()}`;
+    return;
+  }
+
+  // 暑假模式：周末使用合并任务
+  const isSummerWeekend = isSummerMode() && (tld.dayKey === 'sat' || tld.dayKey === 'sun');
+  const tasks = isSummerWeekend ? getSummerDayTasks(tld.week, tld.dayKey) : (week.days[tld.dayKey] || []);
+  // 暑假期间：每项任务的完成状态按当天日期检查（和平日一样）
+  const comp = (() => {
+    let done = 0;
+    const total = tasks.length;
+    tasks.forEach(t => { if (isTaskCompleted(t.id, todayStr)) done++; });
+    return { completed: done, total, pct: total > 0 ? Math.round((done / total) * 100) : 0 };
+  })();
+  const totalHours = tasks.reduce((sum, t) => {
+    const h = parseFloat(t.duration) || 0;
+    return sum + h;
+  }, 0);
+
+  let tasksHtml = tasks.map(t => {
+    const done = isTaskCompleted(t.id, todayStr);
+    const diff = getTaskDifficulty(t);
+    const microSteps = getMicroSteps(t);
+    const msDone = microSteps ? getMicroStepPct(t.id, microSteps) : 0;
+    const hasMicroSteps = microSteps && microSteps.length > 0;
+    const autoExpand = diff === 'hard'; // 挑战级任务自动展示微步骤
+
+    let msHtml = '';
+    if (hasMicroSteps) {
+      msHtml = `
+        <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+          <span class="micro-steps-toggle" onclick="event.stopPropagation();toggleMicroSteps('${t.id}')">
+            📋 ${msDone > 0 ? `小步骤 ${msDone}%` : '分解小步骤'}
+          </span>
+          <span class="diff-tag ${diff}">${getDiffLabel(diff)}</span>
+        </div>
+        <div class="micro-steps ${autoExpand ? 'visible' : ''}" id="ms-${t.id}">
+          ${microSteps.map((ms, i) => {
+            const msDoneCheck = isMicroStepDone(t.id, i);
+            return `
+              <div class="micro-step ${msDoneCheck ? 'done' : ''}" onclick="event.stopPropagation();toggleMicroStep('${t.id}',${i})">
+                <div class="ms-check">${msDoneCheck ? '✓' : ''}</div>
+                <span class="ms-text">${ms.text} <span style="color:var(--text-muted);font-size:0.65rem;">${ms.dur}</span></span>
+              </div>
+            `;
+          }).join('')}
+        </div>`;
+    } else {
+      msHtml = `<span class="diff-tag ${diff}" style="margin-top:2px;">${getDiffLabel(diff)}</span>`;
+    }
+
+    return `
+      <li class="task-item ${done ? 'completed' : ''}">
+        <div class="task-check" onclick="event.stopPropagation();toggleTask('${t.id}');renderToday();">${done ? '✓' : ''}</div>
+        <div class="task-body">
+          <div class="task-text" onclick="toggleTask('${t.id}');renderToday();">${t.text}</div>
+          ${msHtml}
+        </div>
+        <div class="task-duration" onclick="toggleTask('${t.id}');renderToday();">${t.duration}</div>
+      </li>
+    `;
+  }).join('');
+
+  const pctClass = comp.pct === 100 ? 'success' : comp.pct < 30 ? 'danger' : '';
+
+  container.innerHTML = `
+    <div class="streak-bar">
+      <div class="streak-item">
+        <div class="streak-value">${state.currentStreak}</div>
+        <div class="streak-label">当前连续天数</div>
+      </div>
+      <div class="streak-divider"></div>
+      <div class="streak-item">
+        <div class="streak-value">${state.longestStreak}</div>
+        <div class="streak-label">最长连续记录</div>
+      </div>
+      <div class="streak-divider"></div>
+      <div class="streak-item">
+        <div class="streak-value">${state.penaltyBalance}</div>
+        <div class="streak-label">惩罚金(¥)</div>
+      </div>
+    </div>
+
+    <!-- v2.0 情绪快速检查（STMR理论：觉察是改变的第一步） -->
+    <div class="mood-selector" id="mood-selector">
+      <button class="mood-btn" data-mood="tired" onclick="logMood('tired')"><span class="mood-emoji">😴</span>疲惫</button>
+      <button class="mood-btn" data-mood="anxious" onclick="logMood('anxious')"><span class="mood-emoji">😰</span>紧张</button>
+      <button class="mood-btn" data-mood="motivated" onclick="logMood('motivated')"><span class="mood-emoji">💪</span>有动力</button>
+      <button class="mood-btn" data-mood="resistant" onclick="logMood('resistant')"><span class="mood-emoji">😤</span>抗拒</button>
+      <button class="mood-btn" data-mood="confused" onclick="logMood('confused')"><span class="mood-emoji">🤔</span>迷茫</button>
+    </div>
+    <div class="mood-msg" id="mood-message"></div>
+
+    <!-- v2.0 实施意图承诺（Gollwitzer：具体计划提升200-300%执行率） -->
+    <div id="commitment-area">${renderCommitmentCard(todayStr)}</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">第${tld.week}周 · ${DAY_LABELS[tld.dayKey]}</div>
+          <div class="card-subtitle">${week.theme} · 预计${totalHours}小时</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:1.4rem;font-weight:800;color:${comp.pct===100?'var(--success)':'var(--accent)'};">${comp.pct}%</div>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-bar">
+          <div class="progress-fill ${pctClass}" style="width:${comp.pct}%;"></div>
+        </div>
+        <div class="progress-label" style="margin-top:4px;">
+          <span>${comp.completed}/${comp.total} 项完成</span>
+          ${comp.pct === 100 ? '<span style="color:var(--success);">✓ 今日完成！</span>' : `<span style="color:var(--danger);font-size:0.72rem;">${getLossFrameText(comp.total-comp.completed, comp.total)}</span>`}
+        </div>
+      </div>
+
+      <ul class="task-list">${tasksHtml}</ul>
+    </div>
+
+    <div class="card" style="padding:12px 16px;font-size:0.8rem;color:var(--text-secondary);">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span>📌 本周里程碑</span>
+        <span style="color:var(--accent);">${getWeekCompletion(tld.week).pct}% 本周完成</span>
+      </div>
+      <p style="margin-top:6px;font-size:0.82rem;color:var(--text-primary);">${week.milestone}</p>
+    </div>
+
+    ${renderMilestoneCountdown()}
+    ${renderAltTasksSection()}
+    ${renderDailyRhythm()}
+    ${tld.dayKey === 'fri_am' ? renderWeeklyReflection(tld.week) : ''}
+    ${comp.pct === 100 ? `
+    <div style="text-align:center;padding:8px;">
+      <span style="font-size:0.85rem;color:var(--success);">🌟 今天的任务全部完成了！继续保持！</span>
+    </div>` : ''}
+  `;
+}
+
+function getNextLearningDay() {
+  if (!state.startedAt) return null;
+  const today = new Date();
+  let cursor = new Date(today);
+  cursor.setDate(cursor.getDate() + 1);
+
+  for (let i = 0; i < 14; i++) {
+    const ld = getLearningDayForDate(cursor);
+    if (ld) {
+      const week = LEARNING_PLAN['week' + ld.week];
+      return {
+        week: ld.week,
+        dayKey: ld.dayKey,
+        label: `${dateStr(cursor)} (${DAY_LABELS[ld.dayKey]})`,
+        theme: week ? week.theme : ''
+      };
+    }
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return null;
+}
+
+function startPlan() {
+  const today = dateStr(new Date());
+  const nextMonday = getNextMonday();
+
+  showModal('设定开始日期', `
+    <p>选择你的12周学习计划开始日期。建议从<strong>周一</strong>开始，这样可以完整利用周一至周五的学习节奏。</p>
+    <div style="margin:8px 0;">
+      <label style="display:block;font-size:0.8rem;color:var(--text-muted);margin-bottom:4px;">开始日期</label>
+      <input type="date" id="start-date-input" value="${nextMonday}"
+        style="width:100%;padding:10px;border-radius:8px;background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);font-size:0.95rem;font-family:inherit;">
+    </div>
+    <p style="font-size:0.75rem;color:var(--text-muted);">📌 建议从最近的周一开始（已自动填入）</p>
+  `, [
+    { label: '取消', cls: 'btn-outline' },
+    { label: '确认开始 🚀', cls: 'btn-primary' }
+  ]).then(idx => {
+    if (idx === 1) {
+      const input = document.getElementById('start-date-input');
+      if (input && input.value) {
+        state.startedAt = input.value;
+        state.currentWeekOverride = null;
+        state.penaltyBalance = 0;
+        state.penaltyHistory = [];
+        saveState();
+        updateStats();
+        requestNotificationPermission();
+        scheduleReminder();
+        renderToday();
+        renderAll();
+        showToast('学习计划已启动！每天上午' + state.reminderTime + '会收到提醒', 'success');
+      }
+    }
+  });
+}
+
+function getNextMonday() {
+  const today = new Date();
+  const dow = today.getDay();
+  const daysUntilMonday = dow === 1 ? 0 : (8 - dow) % 7;
+  const nextMonday = new Date(today);
+  if (daysUntilMonday === 0 && today.getHours() > 12) {
+    nextMonday.setDate(today.getDate() + 7);
+  } else if (daysUntilMonday > 0) {
+    nextMonday.setDate(today.getDate() + daysUntilMonday);
+  }
+  return dateStr(nextMonday);
+}
+
+// ==================== 进度视图渲染 ====================
+function renderProgress() {
+  const container = document.getElementById('progress-content');
+
+  if (!state.startedAt) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        <p>设定开始日期后<br>这里会显示你的学习进度</p>
+      </div>
+    `;
+    return;
+  }
+
+  const currentWeek = getCurrentWeek();
+
+  // Overall progress
+  let totalTasks = 0, completedTasks = 0;
+  for (let w = 1; w <= TOTAL_WEEKS; w++) {
+    const comp = getWeekCompletion(w);
+    totalTasks += comp.total;
+    completedTasks += comp.completed;
+  }
+  const overallPct = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+  // Weekly bars
+  let weeksHtml = '';
+  for (let w = 1; w <= TOTAL_WEEKS; w++) {
+    const comp = getWeekCompletion(w);
+    let statusClass = '';
+    let statusIcon = '';
+    if (comp.pct === 100) { statusClass = 'success'; statusIcon = '✓'; }
+    else if (comp.pct > 0) { statusClass = ''; statusIcon = ''; }
+    else { statusIcon = ''; }
+
+    const isCurrent = w === currentWeek;
+    const isPaused = state.pausedWeeks.includes(w);
+
+    weeksHtml += `
+      <div style="margin-bottom:8px;">
+        <div class="progress-label">
+          <span>${isCurrent ? '📍 ' : ''}W${w} ${LEARNING_PLAN['week'+w]?.theme || ''} ${isPaused ? '⏸️' : ''}</span>
+          <span>${comp.pct}% ${statusIcon}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill ${statusClass}" style="width:${comp.pct}%;${isPaused?'background:var(--text-muted);':''}"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Skill tree
+  const allSkills = [];
+  const skillStatus = {};
+  for (let w = 1; w <= TOTAL_WEEKS; w++) {
+    const plan = LEARNING_PLAN['week' + w];
+    if (!plan) continue;
+    const comp = getWeekCompletion(w);
+    for (const skill of plan.skillsGained) {
+      if (!allSkills.includes(skill)) {
+        allSkills.push(skill);
+        skillStatus[skill] = 'not-started';
+      }
+      if (comp.pct === 100) {
+        skillStatus[skill] = 'done';
+      } else if (comp.pct > 0 && skillStatus[skill] === 'not-started') {
+        skillStatus[skill] = 'in-progress';
+      }
+    }
+  }
+
+  let skillsHtml = allSkills.map(s => {
+    const st = skillStatus[s];
+    const icon = st === 'done' ? '✅' : st === 'in-progress' ? '🔄' : '⬜';
+    const color = st === 'done' ? 'var(--success)' : st === 'in-progress' ? 'var(--accent)' : 'var(--text-muted)';
+    return `<span style="display:inline-block;margin:4px 8px;font-size:0.8rem;color:${color};">${icon} ${s}</span>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">📊 总体进度</div>
+      <div style="font-size:2.5rem;font-weight:800;text-align:center;background:linear-gradient(135deg,var(--accent),#f5d78c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">${overallPct}%</div>
+      <div class="progress-wrap" style="margin-top:8px;">
+        <div class="progress-bar">
+          <div class="progress-fill ${overallPct>=80?'success':''}" style="width:${overallPct}%;"></div>
+        </div>
+        <div class="progress-label" style="margin-top:4px;">
+          <span>${completedTasks}/${totalTasks} 项任务完成</span>
+          <span>${state.totalCompletedDays} 天</span>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:0.75rem;color:var(--text-muted);margin-top:8px;">
+        开始日期：${state.startedAt} · 当前第${currentWeek}周 · 预计完成：${getEstimatedEndDate()}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">📈 每周完成度</div>
+      ${weeksHtml}
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px;">🌳 技能树</div>
+      <div style="line-height:2;">${skillsHtml}</div>
+    </div>
+  `;
+}
+
+function getEstimatedEndDate() {
+  if (!state.startedAt) return '--';
+  const start = parseDate(state.startedAt);
+  // 12 weeks = 84 calendar days, but account for paused weeks
+  const pausedDays = state.pausedWeeks.length * 7;
+  const endDate = new Date(start);
+  endDate.setDate(endDate.getDate() + 84 + pausedDays);
+  return dateStr(endDate);
+}
+
+// ==================== 路线图视图渲染 ====================
+function renderRoadmap() {
+  const container = document.getElementById('roadmap-content');
+  const currentWeek = getCurrentWeek();
+
+  let html = '';
+  for (let w = 1; w <= TOTAL_WEEKS; w++) {
+    const plan = LEARNING_PLAN['week' + w];
+    if (!plan) continue;
+
+    const comp = getWeekCompletion(w);
+    const isCurrent = w === currentWeek;
+    const isDone = comp.pct === 100 && comp.total > 0;
+    const isPaused = state.pausedWeeks.includes(w);
+
+    let statusClass = 'upcoming';
+    let statusText = '未开始';
+    if (isDone) { statusClass = 'done'; statusText = '✓ 已完成'; }
+    else if (isCurrent) { statusClass = 'in-progress'; statusText = '进行中'; }
+    else if (comp.pct > 0) { statusClass = 'in-progress'; statusText = `${comp.pct}%`; }
+    if (isPaused) { statusText += ' ⏸️'; }
+
+    let cardClass = '';
+    if (isCurrent) cardClass = 'current';
+    if (isDone) cardClass = 'completed';
+
+    // Build daily breakdown
+    let daysHtml = '';
+    for (const dayKey of LEARNING_DAYS) {
+      const tasks = plan.days[dayKey] || [];
+      const dayComp = getDayCompletion(w, dayKey);
+      daysHtml += `
+        <div class="day-group">
+          <div class="day-label">${DAY_LABELS[dayKey]} ${dayComp.pct === 100 ? '✓' : `(${dayComp.completed}/${dayComp.total})`}</div>
+          ${tasks.map(t => `<div class="day-task">${t.text} <span style="color:var(--text-muted);font-size:0.7rem;">${t.duration}</span></div>`).join('')}
+        </div>
+      `;
+    }
+
+    // Resources
+    let resourcesHtml = '';
+    if (plan.resources && plan.resources.length > 0) {
+      resourcesHtml = `
+        <div style="margin-top:10px;font-size:0.72rem;color:var(--text-muted);">
+          📚 推荐资源：
+          ${plan.resources.map(r => {
+            if (r.url) {
+              return `<a href="${r.url}" target="_blank" style="color:var(--accent);text-decoration:none;display:inline-block;margin:2px 6px;">[${r.type}] ${r.title}</a>`;
+            }
+            return `<span style="display:inline-block;margin:2px 6px;">[${r.type}] ${r.title}</span>`;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    html += `
+      <div class="week-card ${cardClass}" id="week-card-${w}">
+        <div class="week-card-header" onclick="toggleWeekCard(${w})">
+          <div class="week-num">${isDone ? '✓' : w}</div>
+          <div class="week-info">
+            <div class="week-theme">${plan.theme}</div>
+            <div style="font-size:0.7rem;color:var(--text-muted);">${plan.description.substring(0, 40)}...</div>
+          </div>
+          <span class="week-status ${statusClass}">${statusText}</span>
+          <span style="color:var(--text-muted);font-size:0.7rem;transform:rotate(${isCurrent?180:0}deg);transition:transform 0.3s;" id="week-arrow-${w}">▼</span>
+        </div>
+        <div class="week-card-body">
+          ${daysHtml}
+          <div class="week-milestone">🏆 里程碑：${plan.milestone}</div>
+          ${resourcesHtml}
+          ${renderRoadmapReflection(w)}
+        </div>
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+}
+
+function toggleWeekCard(w) {
+  const card = document.getElementById('week-card-' + w);
+  if (!card) return;
+  card.classList.toggle('expanded');
+  const arrow = document.getElementById('week-arrow-' + w);
+  if (arrow) {
+    arrow.style.transform = card.classList.contains('expanded') ? 'rotate(180deg)' : 'rotate(0deg)';
+  }
+}
+
+// ==================== 设置视图渲染 ====================
+function renderSettings() {
+  const container = document.getElementById('settings-content');
+  const currentWeek = getCurrentWeek();
+
+  container.innerHTML = `
+    <div class="setting-group">
+      <div class="setting-group-title">⏰ 每日提醒</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">开启提醒</div>
+          <div class="setting-desc">每天定时提醒你完成学习任务</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" ${state.reminderEnabled ? 'checked' : ''} onchange="toggleReminder(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">提醒时间</div>
+          <div class="setting-desc">建议设在上午开始学习前</div>
+        </div>
+        <input type="time" value="${state.reminderTime}" onchange="updateReminderTime(this.value)">
+      </div>
+      ${!('Notification' in window) ? '<p style="font-size:0.7rem;color:var(--text-muted);padding:8px;">⚠️ 你的浏览器不支持通知功能。建议同时设置手机闹钟作为备用。</p>' :
+        Notification.permission === 'denied' ? '<p style="font-size:0.7rem;color:var(--danger);padding:8px;">⚠️ 通知权限已被拒绝。请在浏览器设置中允许通知，或使用手机闹钟备用。</p>' :
+        Notification.permission === 'default' ? '<p style="font-size:0.7rem;color:var(--accent);padding:8px;cursor:pointer;" onclick="requestNotificationPermission();showToast(\'请允许通知权限\',\'success\');">📢 点击此处开启通知权限</p>' :
+        '<p style="font-size:0.7rem;color:var(--success);padding:8px;">✅ 通知权限已开启 · 同时建议设置手机闹钟作为备用提醒</p>'
+      }
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-group-title">💰 惩罚机制</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">每日缺勤罚金</div>
+          <div class="setting-desc">每缺勤一天累积的罚金（虚拟记账）</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span style="color:var(--text-muted);">¥</span>
+          <input type="number" value="${state.penaltyPerMissedDay}" min="0" max="100" onchange="updatePenaltyAmount(this.value)">
+        </div>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">当前罚金累计</div>
+          <div class="setting-desc">建议将罚金捐出或请朋友吃饭</div>
+        </div>
+        <span style="font-size:1.3rem;font-weight:700;color:var(--danger);">¥${state.penaltyBalance}</span>
+      </div>
+      ${state.penaltyHistory.length > 0 ? `
+      <div class="card" style="margin-top:8px;">
+        <div class="card-title" style="font-size:0.85rem;margin-bottom:8px;">📋 罚金记录</div>
+        ${state.penaltyHistory.slice(-10).reverse().map(p => `
+          <div style="font-size:0.75rem;padding:4px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">
+            <span style="color:var(--text-secondary);">${p.date} ${p.reason}</span>
+            <span style="color:var(--danger);font-weight:600;">+¥${p.amount}</span>
+          </div>
+        `).join('')}
+      </div>` : ''}
+      <button class="btn btn-outline btn-block btn-sm" style="margin-top:8px;" onclick="resetPenalty()">🔄 重置罚金记录</button>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-group-title">📅 学习进度管理</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">开始日期</div>
+          <div class="setting-desc">${state.startedAt || '未设定'}</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="startPlan()">${state.startedAt ? '修改' : '设定'}</button>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">当前学习周</div>
+          <div class="setting-desc">自动计算：第${currentWeek}周 / 共${TOTAL_WEEKS}周</div>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <button class="btn btn-outline btn-sm" onclick="adjustWeek(-1)" ${currentWeek <= 1 ? 'disabled style="opacity:0.3;"' : ''}>◀</button>
+          <span style="padding:4px 8px;font-weight:600;">${currentWeek}</span>
+          <button class="btn btn-outline btn-sm" onclick="adjustWeek(1)" ${currentWeek >= TOTAL_WEEKS ? 'disabled style="opacity:0.3;"' : ''}>▶</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">暂停的周</div>
+          <div class="setting-desc">${state.pausedWeeks.length > 0 ? '已暂停：第' + state.pausedWeeks.join(', ') + '周' : '无暂停'}</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="togglePauseWeek()">${state.pausedWeeks.includes(currentWeek) ? '▶ 恢复本周' : '⏸ 暂停本周'}</button>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-group-title">☀️ 暑假模式</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">暑假模式</div>
+          <div class="setting-desc">${state.summerMode === 'auto' ? '自动（' + state.summerStart + ' ~ ' + state.summerEnd + '）' : state.summerMode === 'on' ? '手动开启' : '手动关闭'}</div>
+        </div>
+        <select onchange="updateSummerMode(this.value)" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:0.8rem;color:var(--text-primary);font-family:inherit;">
+          <option value="auto" ${state.summerMode === 'auto' ? 'selected' : ''}>自动</option>
+          <option value="on" ${state.summerMode === 'on' ? 'selected' : ''}>开启</option>
+          <option value="off" ${state.summerMode === 'off' ? 'selected' : ''}>关闭</option>
+        </select>
+      </div>
+      <p style="font-size:0.65rem;color:var(--text-muted);padding:4px 8px;">
+        ☀️ 暑假${state.summerStart}~${state.summerEnd} · 周一~周五教学，周六~周日学习<br>
+        💡 自动模式下根据日期自动切换，无需手动操作
+      </p>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-group-title">🕐 节奏校准（4周渐进）</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-label">当前阶段：第${state.rhythmPhase}阶段</div>
+          <div class="setting-desc">${['','⚓ 锚定期：只建立起床+睡觉','🌅 上午激活期：固定早餐+上午学习','🔄 全天节奏期：加入午休+运动','✅ 稳定期：完整7h计划'][state.rhythmPhase]}</div>
+        </div>
+        <div style="display:flex;gap:4px;">
+          <button class="btn btn-outline btn-sm" onclick="adjustRhythmPhase(-1)" ${state.rhythmPhase <= 1 ? 'disabled style="opacity:0.3;"' : ''}>◀</button>
+          <span style="padding:4px 6px;font-weight:700;font-size:0.85rem;">${state.rhythmPhase}/4</span>
+          <button class="btn btn-outline btn-sm" onclick="adjustRhythmPhase(1)" ${state.rhythmPhase >= 4 ? 'disabled style="opacity:0.3;"' : ''}>▶</button>
+        </div>
+      </div>
+      <p style="font-size:0.65rem;color:var(--text-muted);padding:4px 8px;">
+        💡 每阶段持续7天自动升级。行为科学：每次只改变一个变量，成功率提升3倍。如果你想加快/减慢，可以手动调整。
+      </p>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-group-title">🧠 拖延模式分析（CBT）</div>
+      ${renderProcrastinationPattern()}
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-group-title">👥 社会问责</div>
+      <button class="btn btn-outline btn-block" onclick="generateAccountabilityCard()">📋 生成本周问责卡片（发送给朋友监督）</button>
+      <p style="font-size:0.65rem;color:var(--text-muted);padding:4px 8px;">社会问责是行为改变最强的BCT之一——向朋友公开展示进度可将完成率提升65%</p>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-group-title">💾 数据管理</div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="exportData()">📤 导出数据</button>
+        <button class="btn btn-outline" onclick="document.getElementById('import-file-input').click()">📥 导入数据</button>
+        <button class="btn btn-danger" onclick="resetAll()">🔄 重置全部</button>
+      </div>
+      <input type="file" id="import-file-input" accept=".json" style="display:none;" onchange="importData(event)">
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-group-title">📖 关于</div>
+      <div class="card" style="text-align:center;">
+        <p style="font-size:0.9rem;font-weight:600;">🎨 场景原画学习助手 v1.0</p>
+        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">12周系统学习计划 · PWA 离线可用</p>
+        <p style="font-size:0.7rem;color:var(--text-muted);margin-top:8px;">
+          💡 使用建议：每天打开App打卡完成任务<br>
+          📱 长按浏览器菜单 → "添加到主屏幕" 获得App体验<br>
+          ⏰ 同时设置手机闹钟作为备用提醒<br>
+          💰 建议将罚金实际转给朋友或捐出，增强约束力
+        </p>
+      </div>
+    </div>
+  `;
+}
+
+// ==================== 设置操作 ====================
+function toggleReminder(enabled) {
+  state.reminderEnabled = enabled;
+  saveState();
+  if (enabled) {
+    requestNotificationPermission();
+    scheduleReminder();
+    showToast('每日提醒已开启', 'success');
+  } else {
+    showToast('每日提醒已关闭', 'warn');
+  }
+}
+
+function updateReminderTime(time) {
+  state.reminderTime = time;
+  saveState();
+  scheduleReminder();
+  showToast('提醒时间已更新为 ' + time, 'success');
+}
+
+function updatePenaltyAmount(val) {
+  const amount = parseInt(val) || 0;
+  state.penaltyPerMissedDay = Math.max(0, Math.min(100, amount));
+  saveState();
+}
+
+function resetPenalty() {
+  showModal('重置罚金记录', '<p>确定要清空所有罚金记录吗？当前累计：<strong style="color:var(--danger);">¥' + state.penaltyBalance + '</strong></p>', [
+    { label: '取消', cls: 'btn-outline' },
+    { label: '确认重置', cls: 'btn-danger' }
+  ]).then(idx => {
+    if (idx === 1) {
+      state.penaltyBalance = 0;
+      state.penaltyHistory = [];
+      saveState();
+      renderSettings();
+      renderToday();
+      showToast('罚金记录已重置', 'success');
+    }
+  });
+}
+
+function adjustWeek(delta) {
+  const current = getCurrentWeek();
+  const newWeek = Math.max(1, Math.min(TOTAL_WEEKS, current + delta));
+  if (newWeek === getAutoWeek()) {
+    state.currentWeekOverride = null;
+    showToast('已恢复为自动计算周数', 'success');
+  } else {
+    state.currentWeekOverride = newWeek;
+    showToast('手动设置为第' + newWeek + '周', 'success');
+  }
+  saveState();
+  renderAll();
+}
+
+function getAutoWeek() {
+  if (!state.startedAt) return 1;
+  const learningDays = getLearningDaysSinceStart();
+  if (learningDays <= 0) return 1;
+  return Math.min(TOTAL_WEEKS, Math.max(1, Math.floor((learningDays - 1) / 5) + 1));
+}
+
+function updateSummerMode(mode) {
+  state.summerMode = mode;
+  saveState();
+  renderAll();
+  const labels = { auto: '自动切换', on: '暑假模式已开启（周末=学习日）', off: '暑假模式已关闭（平日=学习日）' };
+  showToast(labels[mode] || '', 'success');
+}
+
+function adjustRhythmPhase(delta) {
+  const newPhase = Math.max(1, Math.min(4, state.rhythmPhase + delta));
+  if (newPhase !== state.rhythmPhase) {
+    state.rhythmPhase = newPhase;
+    state.rhythmStartDate = dateStr(new Date()); // Reset timer for new phase
+    saveState();
+    const names = { 1: '⚓ 锚定期', 2: '🌅 上午激活期', 3: '🔄 全天节奏期', 4: '✅ 稳定期' };
+    showToast(`节奏阶段已调整为：${names[newPhase]}`, 'success');
+    renderAll();
+  }
+}
+
+function togglePauseWeek() {
+  const currentWeek = getCurrentWeek();
+  const idx = state.pausedWeeks.indexOf(currentWeek);
+  if (idx >= 0) {
+    state.pausedWeeks.splice(idx, 1);
+    showToast('第' + currentWeek + '周已恢复', 'success');
+  } else {
+    state.pausedWeeks.push(currentWeek);
+    showToast('第' + currentWeek + '周已暂停（不计算考勤）', 'warn');
+  }
+  // Reset override so calendar can recalculate
+  state.currentWeekOverride = null;
+  saveState();
+  renderAll();
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `scene-concept-backup-${dateStr(new Date())}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('数据已导出', 'success');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.version && data.completedTasks) {
+        // Backup current state first
+        const backup = JSON.stringify(state);
+        try {
+          localStorage.setItem(STORAGE_KEY + '_backup', backup);
+        } catch(_) {}
+
+        state = { ...getDefaultState(), ...data };
+        saveState();
+        updateStats();
+        renderAll();
+        showToast('数据导入成功！旧数据已自动备份', 'success');
+      } else {
+        showToast('文件格式不正确', 'error');
+      }
+    } catch (err) {
+      showToast('导入失败：文件解析错误', 'error');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function resetAll() {
+  showModal('⚠️ 重置全部数据', `
+    <p>这将<strong style="color:var(--danger);">永久删除</strong>所有学习记录、完成进度和罚金数据。</p>
+    <p>建议先<strong>导出数据</strong>做备份。</p>
+    <p style="margin-top:12px;font-size:0.8rem;">如需确认，请在下方输入 <code>RESET</code></p>
+    <input type="text" id="reset-confirm-input" placeholder="输入 RESET 确认"
+      style="width:100%;padding:10px;border-radius:8px;background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);font-size:0.9rem;font-family:inherit;margin-top:8px;">
+  `, [
+    { label: '取消', cls: 'btn-outline' },
+    { label: '确认重置', cls: 'btn-danger' }
+  ]).then(idx => {
+    if (idx === 1) {
+      const input = document.getElementById('reset-confirm-input');
+      if (input && input.value === 'RESET') {
+        localStorage.removeItem(STORAGE_KEY);
+        state = getDefaultState();
+        renderAll();
+        showToast('所有数据已重置', 'success');
+      } else {
+        showToast('重置取消：请输入 RESET 确认', 'error');
+      }
+    }
+  });
+}
+
+// ==================== v2.0 — 拖延症行为科学核心函数 ====================
+
+// --- 任务微分解：动态生成微步骤 ---
+function getMicroSteps(task) {
+  const hours = parseFloat(task.duration) || 1;
+  if (hours <= 0.5) return null;
+
+  const text = task.text;
+  const steps = [];
+
+  if (text.includes('临摹') || text.includes('练习') && !text.includes('理论')) {
+    steps.push({ text: '观察分析：花几分钟研究参考', dur: '5min' });
+    steps.push({ text: '起稿：用几何形状搭建基础框架', dur: '10min' });
+    steps.push({ text: '主体刻画：逐步添加细节和层次', dur: Math.round(hours * 25) + 'min' });
+    steps.push({ text: '检查对比：对照参考标记改进点', dur: '5min' });
+  } else if (text.includes('学习') || text.includes('理解') || text.includes('原理') || text.includes('理论') || text.includes('概念')) {
+    steps.push({ text: '速览：先快速浏览一遍整体内容', dur: '5min' });
+    steps.push({ text: '精读笔记：逐段理解并记录要点', dur: Math.round(hours * 25) + 'min' });
+    steps.push({ text: '复述总结：用自己的话概括核心概念', dur: '10min' });
+    steps.push({ text: '关联思考：这个知识点如何用到画里？', dur: '5min' });
+  } else if (text.includes('原创') || text.includes('创作') || text.includes('设计')) {
+    steps.push({ text: '头脑风暴：快速出3-5个构思方向', dur: '10min' });
+    steps.push({ text: '选定+起稿：确定构图和主要元素', dur: '15min' });
+    steps.push({ text: '主体刻画：逐个完成画面主要元素', dur: Math.round(hours * 25) + 'min' });
+    steps.push({ text: '整体调整：检查效果，最终润色', dur: '10min' });
+  } else if (text.includes('分析') || text.includes('研究') || text.includes('参考')) {
+    steps.push({ text: '素材收集：找到需要的参考图/作品', dur: '5min' });
+    steps.push({ text: '逐一分析：按维度拆解分析', dur: Math.round(hours * 30) + 'min' });
+    steps.push({ text: '记录发现：写下可借鉴之处', dur: '5min' });
+  } else if (text.includes('总结') || text.includes('整理') || text.includes('回顾') || text.includes('复盘')) {
+    steps.push({ text: '素材汇总：收集本周/本期所有作品', dur: '5min' });
+    steps.push({ text: '逐张审视：标注每张的优缺点', dur: Math.round(hours * 25) + 'min' });
+    steps.push({ text: '写总结：进步点 + 待改进点', dur: '10min' });
+  } else if (text.includes('速写') || text.includes('挑战') || text.includes('限时')) {
+    steps.push({ text: '工具准备：备好纸笔/数位板', dur: '3min' });
+    steps.push({ text: '快速构思：10秒决定画面方向', dur: '1min' });
+    steps.push({ text: '限时执行：严格控制时间完成', dur: Math.round(hours * 40) + 'min' });
+    steps.push({ text: '复盘：花2分钟看看哪里可以更快', dur: '2min' });
+  } else {
+    steps.push({ text: '明确产出：确定做完后具体产出什么', dur: '3min' });
+    steps.push({ text: '分阶段推进：自然分成几步完成', dur: Math.round(hours * 30) + 'min' });
+    steps.push({ text: '收尾检查：确认产出质量', dur: '5min' });
+  }
+  return steps;
+}
+
+function getTaskDifficulty(task) {
+  const hours = parseFloat(task.duration) || 0.5;
+  if (hours <= 0.75) return 'easy';
+  if (hours <= 2) return 'medium';
+  return 'hard';
+}
+
+function getDiffLabel(diff) {
+  if (diff === 'easy') return '🟢 容易';
+  if (diff === 'medium') return '🟡 中等';
+  return '🔴 挑战';
+}
+
+// --- 微步骤操作 ---
+function toggleMicroSteps(taskId) {
+  const el = document.getElementById('ms-' + taskId);
+  if (!el) return;
+  const visible = el.classList.toggle('visible');
+  // Track expanded state
+  if (visible && navigator.vibrate) navigator.vibrate(5);
+}
+
+function toggleMicroStep(taskId, stepIdx) {
+  if (!state.microStepCompletions[taskId]) {
+    state.microStepCompletions[taskId] = [];
+  }
+  const arr = state.microStepCompletions[taskId];
+  const pos = arr.indexOf(stepIdx);
+  if (pos >= 0) {
+    arr.splice(pos, 1);
+  } else {
+    arr.push(stepIdx);
+    if (navigator.vibrate) navigator.vibrate(8);
+  }
+  saveState();
+  renderToday();
+}
+
+function isMicroStepDone(taskId, stepIdx) {
+  return (state.microStepCompletions[taskId] || []).includes(stepIdx);
+}
+
+function getMicroStepPct(taskId, steps) {
+  if (!steps || steps.length === 0) return 0;
+  const done = (state.microStepCompletions[taskId] || []).length;
+  return Math.round((done / steps.length) * 100);
+}
+
+// --- 实施意图承诺 ---
+function saveCommitment(time, place) {
+  const today = dateStr(new Date());
+  state.dailyCommitment[today] = { time, place, fulfilled: false };
+  saveState();
+  renderToday();
+  showToast('承诺已记录！研究显示，写下具体计划可将执行率提高2-3倍 📝', 'success', 3500);
+}
+
+function checkCommitmentFulfilled() {
+  const today = dateStr(new Date());
+  return state.dailyCommitment[today] && state.dailyCommitment[today].fulfilled;
+}
+
+// --- 情绪检查 ---
+function logMood(mood) {
+  const today = dateStr(new Date());
+  state.moodLog[today] = { mood, timestamp: new Date().toISOString() };
+  saveState();
+
+  // Show CBT micro-message based on mood
+  const msgs = {
+    tired: '💤 疲惫是真实的。试着只做5分钟——往往开始后疲惫感会减轻。',
+    anxious: '😰 紧张很正常，说明你在乎。把注意力从"结果"转到"过程"——今天只需画，不需完美。',
+    motivated: '💪 动力来了就抓住它！先攻克最难的那个任务。',
+    resistant: '😤 抗拒感是拖延的经典信号。记住：你不需要"想做"，你只需要"开始做"。5分钟法则——5分钟后你可以停下。',
+    confused: '🤔 迷茫时，回到基础。挑一个最简单的任务开始，清晰感会在行动中浮现。',
+    neutral: '😐 平常心也不错。今天从哪个任务开始？'
+  };
+  const msgEl = document.getElementById('mood-message');
+  if (msgEl) {
+    msgEl.textContent = msgs[mood] || '';
+    msgEl.classList.add('visible');
+  }
+
+  // Update mood selector
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  const selected = document.querySelector(`.mood-btn[data-mood="${mood}"]`);
+  if (selected) selected.classList.add('selected');
+}
+
+// --- CBT 缺勤反思 ---
+function logProcrastinationReason(reason, note) {
+  const today = dateStr(new Date());
+  // Log for yesterday (the missed day)
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yd = dateStr(yesterday);
+
+  state.procrastinationReasons[yd] = { reason, note: note || '' };
+  saveState();
+  showToast('感谢诚实记录。识别原因是改变的第一步 🔍', 'success', 3000);
+}
+
+function getProcrastinationPattern() {
+  const reasons = Object.values(state.procrastinationReasons);
+  if (reasons.length === 0) return null;
+
+  const counts = {};
+  reasons.forEach(r => {
+    counts[r.reason] = (counts[r.reason] || 0) + 1;
+  });
+
+  const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const total = reasons.length;
+  const top = sorted[0];
+
+  const labels = {
+    too_tired: '😴 太累了',
+    phone_distracted: '📱 手机分心',
+    too_hard: '😰 任务太难不敢开始',
+    busy: '🏃 临时有事',
+    no_motivation: '🤷 就是不想动',
+    other: '💬 其他'
+  };
+
+  const suggestions = {
+    too_tired: '建议：调整学习时间到精力最好的时段（如早上），保证7-8小时睡眠',
+    phone_distracted: '建议：学习时把手机放在另一个房间，或使用专注模式屏蔽通知',
+    too_hard: '建议：使用任务分解功能，从5分钟的小步骤开始；降低完美主义——完成>完美',
+    busy: '建议：评估是否真的"没时间"还是把学习排到了最低优先级',
+    no_motivation: '建议：回顾你最初为什么想学场景原画；用5分钟法则打破惰性',
+    other: '建议：尝试用周反思深入了解自己的拖延触发点'
+  };
+
+  return {
+    total,
+    topReason: top[0],
+    topLabel: labels[top[0]] || top[0],
+    topPct: Math.round((top[1] / total) * 100),
+    topSuggestion: suggestions[top[0]] || '',
+    distribution: sorted.map(([k, v]) => ({
+      label: labels[k] || k,
+      count: v,
+      pct: Math.round((v / total) * 100)
+    }))
+  };
+}
+
+// --- 损失厌恶框架文案 ---
+function getLossFrameText(remaining, total) {
+  if (remaining === 0) return '✅ 全部完成！进度守住，罚金为零';
+  const pct = Math.round((remaining / total) * 100);
+  if (pct > 70) {
+    return `⚠️ 还剩${remaining}项！今天不完成 = -¥${state.penaltyPerMissedDay} 罚金 + 中断${state.currentStreak}天连续记录`;
+  }
+  return `⏳ 还剩${remaining}项，抓紧完成，避免罚金和进度倒退`;
+}
+
+// --- 里程碑倒计时 ---
+function getDaysUntilMilestone() {
+  if (!state.startedAt) return null;
+  const currentWeek = getCurrentWeek();
+  if (currentWeek > TOTAL_WEEKS) return null;
+
+  // Count remaining learning days until Friday of current week
+  const today = new Date();
+  let daysLeft = 0;
+  let cursor = new Date(today);
+
+  // Find the Friday of current week
+  const dow = getDayOfWeek(today);
+  const daysUntilFriday = dow <= 5 ? 5 - dow : 0;
+  const friday = new Date(today);
+  friday.setDate(today.getDate() + daysUntilFriday);
+
+  // Count learning days from tomorrow to Friday
+  cursor.setDate(cursor.getDate() + 1);
+  while (dateStr(cursor) <= dateStr(friday)) {
+    if (isLearningDay(cursor)) {
+      const week = getWeekForDate(cursor);
+      if (!state.pausedWeeks.includes(week)) {
+        daysLeft++;
+      }
+    }
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  return {
+    daysLeft,
+    week: currentWeek,
+    milestone: LEARNING_PLAN['week' + currentWeek]?.milestone || ''
+  };
+}
+
+// --- 替代任务 ---
+function getAltTasks() {
+  return [
+    { id: 'alt-1', text: '📺 看1小时场景原画教程视频（B站/YouTube）', icon: '📺' },
+    { id: 'alt-2', text: '🖼️ 收集20张场景参考图并分类整理', icon: '🖼️' },
+    { id: 'alt-3', text: '🔍 分析5张大师场景作品（构图/光影/色彩）', icon: '🔍' },
+    { id: 'alt-4', text: '✏️ 自由速写30分钟（不限主题，保持手感）', icon: '✏️' },
+    { id: 'alt-5', text: '📖 阅读场景原画相关书籍30分钟', icon: '📖' }
+  ];
+}
+
+// --- 周反思 ---
+function saveWeeklyReflection(week, field, value) {
+  if (!state.weeklyReflections['week' + week]) {
+    state.weeklyReflections['week' + week] = { achievement: '', difficulty: '', adjust: '' };
+  }
+  state.weeklyReflections['week' + week][field] = value;
+  saveState();
+}
+
+// --- 社会问责卡片 ---
+function generateAccountabilityCard() {
+  const currentWeek = getCurrentWeek();
+  const weekComp = getWeekCompletion(currentWeek);
+
+  const text = `🎨 场景原画学习周报
+━━━━━━━━━━━━━━
+📅 第${currentWeek}周 / 共12周
+📊 本周完成度：${weekComp.pct}%
+🔥 连续打卡：${state.currentStreak} 天
+🏆 最长记录：${state.longestStreak} 天
+💰 累计罚金：¥${state.penaltyBalance}
+📋 累计完成：${state.totalCompletedDays} 天
+━━━━━━━━━━━━━━
+主题：${LEARNING_PLAN['week' + currentWeek]?.theme || ''}
+里程碑：${LEARNING_PLAN['week' + currentWeek]?.milestone || ''}
+━━━━━━━━━━━━━━
+监督人签名：__________
+日期：${dateStr(new Date())}
+`;
+
+  // Copy to clipboard
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('问责卡片已复制到剪贴板，可以发送给朋友 📋', 'success', 4000);
+    }).catch(() => {
+      showModal('📋 问责卡片', `<pre style="white-space:pre-line;font-size:0.8rem;color:var(--text-primary);">${text}</pre>
+        <p style="font-size:0.75rem;color:var(--text-muted);">长按文字可复制，发送给朋友作为监督</p>`, [
+        { label: '关闭', cls: 'btn-primary' }
+      ]);
+    });
+  } else {
+    showModal('📋 问责卡片', `<pre class="accountability-card">${text}</pre>
+      <p style="font-size:0.75rem;color:var(--text-muted);">截图或长按复制，发送给朋友作为监督</p>`, [
+      { label: '关闭', cls: 'btn-primary' }
+    ]);
+  }
+}
+
+// ==================== v2.0 渲染辅助函数 ====================
+
+// --- 承诺卡片渲染 ---
+function renderCommitmentCard(todayStr) {
+  const existing = state.dailyCommitment[todayStr];
+  if (existing) {
+    const fulfilled = existing.fulfilled;
+    const isOverdue = !fulfilled && new Date().getHours() >= 12 && existing.time && existing.time < '12:00';
+    let cls = 'commit-active';
+    let msg = `📝 你承诺了 ${existing.time} 在「${existing.place || '未指定地点'}」开始`;
+    if (fulfilled) {
+      msg += ' ✅ 已兑现！';
+    } else if (isOverdue) {
+      cls += ' commit-overdue';
+      msg += ' ⚠️ 承诺时间已过，现在开始也不晚！';
+    } else {
+      msg += ' ⏳ 等待兑现...';
+    }
+    return `<div class="commitment-card"><div class="${cls}">${msg}</div></div>`;
+  }
+
+  return `
+    <div class="commitment-card" id="commitment-input-card">
+      <div class="commit-title">📝 今日承诺（研究：写下具体计划可提升2-3倍执行率）</div>
+      <input type="time" id="commit-time" value="09:00" style="margin-bottom:6px;">
+      <input type="text" id="commit-place" placeholder="在什么地方画？（如：书房/咖啡厅/画室）" maxlength="30">
+      <button class="btn btn-primary btn-sm" style="margin-top:8px;width:100%;" onclick="saveCommitment(
+        document.getElementById('commit-time').value,
+        document.getElementById('commit-place').value
+      )">✍️ 记录承诺</button>
+    </div>
+  `;
+}
+
+// --- 里程碑倒计时 ---
+function renderMilestoneCountdown() {
+  const cd = getDaysUntilMilestone();
+  if (!cd || cd.daysLeft < 0) return '';
+  const isUrgent = cd.daysLeft <= 1;
+  return `
+    <div class="countdown-bar ${isUrgent ? 'urgent' : ''}">
+      <span class="count-icon">${isUrgent ? '🔴' : '📅'}</span>
+      <span>距本周里程碑</span>
+      <span class="count-num">${cd.daysLeft}</span>
+      <span>天</span>
+      ${isUrgent ? '<span style="font-size:0.7rem;color:var(--danger);">（错过将延后整个计划）</span>' : ''}
+    </div>
+  `;
+}
+
+// --- 替代任务区（结构化拖延） ---
+function renderAltTasksSection() {
+  return `
+    <div class="alt-tasks-section">
+      <div class="alt-tasks-header" onclick="document.getElementById('alt-tasks-list').classList.toggle('visible')">
+        💡 今天不想画？展开替代练习 ▼
+      </div>
+      <div class="alt-tasks-list" id="alt-tasks-list">
+        ${getAltTasks().map(t => `
+          <div class="alt-task-item" onclick="this.style.opacity='0.4';showToast('替代任务已记录 ✓ 至少你在朝目标前进','success',2000)">
+            <div class="alt-check"></div>
+            <span>${t.text}</span>
+          </div>
+        `).join('')}
+        <p style="font-size:0.65rem;color:var(--text-muted);margin-top:4px;padding-left:26px;">John Perry：与拖延合作，做替代任务总比什么都不做好</p>
+      </div>
+    </div>
+  `;
+}
+
+// --- 拖延模式分析渲染 ---
+function renderProcrastinationPattern() {
+  const pattern = getProcrastinationPattern();
+  if (!pattern) {
+    return '<p style="font-size:0.78rem;color:var(--text-muted);padding:8px;">暂无数据。当你缺勤并选择原因后，这里会分析你的拖延模式。</p>';
+  }
+
+  let barsHtml = pattern.distribution.map(d => `
+    <div class="pattern-item">
+      <span style="font-size:0.75rem;">${d.label}</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="pattern-bar" style="width:${Math.max(d.pct * 1.5, 4)}px;background:${d.label === pattern.topLabel ? 'var(--danger)' : 'var(--text-muted)'};"></div>
+        <span style="font-size:0.7rem;color:var(--text-muted);min-width:32px;">${d.pct}%</span>
+      </div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="card" style="margin-top:8px;">
+      <div class="pattern-analysis">
+        <p style="font-weight:600;margin-bottom:6px;">📊 基于${pattern.total}次缺勤记录：</p>
+        <p style="margin-bottom:4px;">主要拖延原因：<strong style="color:var(--danger);">${pattern.topLabel}</strong>（占${pattern.topPct}%）</p>
+        ${pattern.topSuggestion ? `<p style="color:var(--accent);margin-bottom:8px;font-size:0.75rem;">💡 ${pattern.topSuggestion}</p>` : ''}
+        ${barsHtml}
+      </div>
+    </div>
+  `;
+}
+
+// --- 路线图反思展示 ---
+function renderRoadmapReflection(week) {
+  const ref = state.weeklyReflections['week' + week];
+  if (!ref || (!ref.achievement && !ref.difficulty && !ref.adjust)) return '';
+  return `
+    <div style="margin-top:10px;padding:10px 12px;background:rgba(232,168,80,0.05);border-radius:6px;border-left:2px solid var(--accent);">
+      <div style="font-size:0.7rem;font-weight:600;color:var(--accent);margin-bottom:6px;">📝 周反思回顾</div>
+      ${ref.achievement ? `<p style="font-size:0.7rem;color:var(--text-secondary);margin:2px 0;">✅ 成就：${ref.achievement}</p>` : ''}
+      ${ref.difficulty ? `<p style="font-size:0.7rem;color:var(--text-secondary);margin:2px 0;">💪 困难：${ref.difficulty}</p>` : ''}
+      ${ref.adjust ? `<p style="font-size:0.7rem;color:var(--text-secondary);margin:2px 0;">🔄 调整：${ref.adjust}</p>` : ''}
+    </div>
+  `;
+}
+
+// --- 每日节奏渲染 ---
+function renderDailyRhythm() {
+  // Auto-init rhythm calibration
+  if (!state.rhythmStartDate) {
+    state.rhythmStartDate = dateStr(new Date());
+    state.rhythmPhase = 1;
+    saveState();
+  }
+
+  const today = new Date();
+  const dow = getDayOfWeek(today);
+  const isWeekendDay = dow === 0 || dow === 6;
+  const isFridayPM = dow === 5 && today.getHours() >= 12;
+  const summer = isSummerMode();
+  const phase = state.rhythmPhase;
+
+  // Phase names and descriptions
+  const phases = {
+    1: { name: '锚定期', icon: '⚓', goal: '只建立起床+睡觉锚点', hours: '2h', color: '#2EC4B6' },
+    2: { name: '上午激活期', icon: '🌅', goal: '固定早餐+上午开始学习', hours: '4h', color: '#F4A340' },
+    3: { name: '全天节奏期', icon: '🔄', goal: '加入午休+运动习惯', hours: '6h', color: '#FF6B4A' },
+    4: { name: '稳定期', icon: '✅', goal: '完整7h学习计划运行', hours: '7h', color: '#FF6B4A' }
+  };
+
+  const p = phases[phase];
+  const daysInPhase = getPhaseDays();
+  const daysUntilNext = phase < 4 ? Math.max(0, 7 - daysInPhase) : 0;
+
+  // Phase progress bar
+  const phaseBar = `
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:0.68rem;">
+      <span style="color:${p.color};font-weight:700;">${p.icon} 第${phase}阶段·${p.name}</span>
+      <span style="color:var(--text-muted);">目标：${p.goal}</span>
+      ${phase < 4 ? `<span style="color:var(--text-muted);margin-left:auto;">距升级还有${daysUntilNext}天</span>` : '<span style="color:var(--success);margin-left:auto;">✓ 已稳定</span>'}
+    </div>
+    <div class="progress-bar" style="margin-bottom:10px;height:4px;">
+      <div class="progress-fill success" style="width:${Math.min(100, (daysInPhase/7)*100)}%;border-radius:2px;"></div>
+    </div>
+  `;
+
+  // ---- 暑假周末：学习日 ----
+  if (isWeekendDay && summer) {
+    const isSat = dow === 6;
+    return `
+      <div class="daily-rhythm expanded" id="daily-rhythm">
+        <div class="daily-rhythm-header" onclick="document.getElementById('daily-rhythm').classList.toggle('expanded')">
+          <span class="rhythm-title">☀️ 今日节奏 · 暑假${isSat ? '周六' : '周日'}（学习日）</span>
+          <span style="font-size:0.7rem;color:var(--text-muted);">收起 ▲</span>
+        </div>
+        <div class="daily-rhythm-body">
+          ${phaseBar}
+          <div class="rhythm-timeline">
+            <div class="rhythm-slot rest"><span class="rhythm-time">08:00</span><span class="rhythm-act">起床 🌅（暑假也要保持节奏）</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">08:30</span><span class="rhythm-act">早餐 🍳</span></div>
+            <div class="rhythm-slot study"><span class="rhythm-time">09:00</span><span class="rhythm-act">🔴 学习块1：深度专注（3h）</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">12:00</span><span class="rhythm-act">午餐 🥗</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">12:30</span><span class="rhythm-act">午休 30min 😴</span></div>
+            <div class="rhythm-slot study"><span class="rhythm-time">13:00</span><span class="rhythm-act">${isSat ? '🟡 学习块2（2h）+ 下午茶' : '🟢 学习块2（1.5h）'}</span></div>
+            ${isSat ? `<div class="rhythm-slot rest"><span class="rhythm-time">15:30</span><span class="rhythm-act">运动/散步 🏃 45min</span></div>` : `<div class="rhythm-slot rest"><span class="rhythm-time">14:30</span><span class="rhythm-act">自由时间 🎮（周日半天休息）</span></div>`}
+            <div class="rhythm-slot meal"><span class="rhythm-time">18:00</span><span class="rhythm-act">晚餐 🍜</span></div>
+            <div class="rhythm-slot play"><span class="rhythm-time">19:00</span><span class="rhythm-act">自由时间 🎮</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">23:00</span><span class="rhythm-act">睡觉 😴</span></div>
+          </div>
+          <div class="rhythm-note">
+            ☀️ <strong>暑假学习日：${isSat ? '周六6h' : '周日4.5h'}</strong> · 周一~周五全天教学<br>
+            📚 ${isSat ? '周六合并周一+周二任务' : '周日合并周三+周四任务'}<br>
+            💡 暑假教学为主，周末学习保持手感即可
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // ---- 平时周末：教学日 ----
+  if (isWeekendDay && !summer) {
+    return `
+      <div class="daily-rhythm" id="daily-rhythm">
+        <div class="daily-rhythm-header" onclick="document.getElementById('daily-rhythm').classList.toggle('expanded')">
+          <span class="rhythm-title">📅 今日节奏 · 教学日</span>
+          <span style="font-size:0.7rem;color:var(--text-muted);">展开 ▼</span>
+        </div>
+        <div class="daily-rhythm-body">
+          ${phaseBar}
+          <div class="rhythm-timeline">
+            <div class="rhythm-slot meal"><span class="rhythm-time">08:00</span><span class="rhythm-act">早餐 🍳</span></div>
+            <div class="rhythm-slot study"><span class="rhythm-time">09:00</span><span class="rhythm-act">上午教学 📚</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">12:00</span><span class="rhythm-act">午餐 🥗</span></div>
+            <div class="rhythm-slot study"><span class="rhythm-time">13:30</span><span class="rhythm-act">下午教学 📚</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">17:00</span><span class="rhythm-act">休息放松</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">18:00</span><span class="rhythm-act">晚餐 🍜</span></div>
+            <div class="rhythm-slot play"><span class="rhythm-time">19:00</span><span class="rhythm-act">自由时间 🎮</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">23:00</span><span class="rhythm-act">睡觉 😴</span></div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // Friday PM is always light
+  if (isFridayPM) {
+    return `
+      <div class="daily-rhythm" id="daily-rhythm">
+        <div class="daily-rhythm-header" onclick="document.getElementById('daily-rhythm').classList.toggle('expanded')">
+          <span class="rhythm-title">📅 今日节奏 · 周五下午教学</span>
+          <span style="font-size:0.7rem;color:var(--text-muted);">展开 ▼</span>
+        </div>
+        <div class="daily-rhythm-body">
+          <div class="rhythm-timeline">
+            <div class="rhythm-slot study"><span class="rhythm-time">08:30</span><span class="rhythm-act">上午学习已完成 ✅</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">12:00</span><span class="rhythm-act">午餐 🥗</span></div>
+            <div class="rhythm-slot study"><span class="rhythm-time">13:30</span><span class="rhythm-act">下午教学 📚</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">17:00</span><span class="rhythm-act">教学结束·休息</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">18:00</span><span class="rhythm-act">晚餐 🍜</span></div>
+            <div class="rhythm-slot play"><span class="rhythm-time">19:00</span><span class="rhythm-act">自由时间 🎮</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">23:00</span><span class="rhythm-act">睡觉 😴</span></div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // ---- LEARNING DAY SCHEDULES BY PHASE ----
+
+  if (phase === 1) {
+    // Phase 1: Only anchor wake/sleep, 1 study block afternoon
+    return `
+      <div class="daily-rhythm expanded" id="daily-rhythm">
+        <div class="daily-rhythm-header" onclick="document.getElementById('daily-rhythm').classList.toggle('expanded')">
+          <span class="rhythm-title">📅 今日节奏 · ${p.name}</span>
+          <span style="font-size:0.7rem;color:var(--text-muted);">收起 ▲</span>
+        </div>
+        <div class="daily-rhythm-body">
+          ${phaseBar}
+          <div class="rhythm-timeline">
+            <div class="rhythm-slot rest"><span class="rhythm-time">08:00</span><span class="rhythm-act">⚓ 起床（核心锚点！其他随意）</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">—</span><span class="rhythm-act">早餐（时间自由，但尽量规律）</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">上午</span><span class="rhythm-act">自由安排 · 适应早起即可</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">12:00</span><span class="rhythm-act">午餐 🥗</span></div>
+            <div class="rhythm-slot study"><span class="rhythm-time">14:00</span><span class="rhythm-act">🟢 1个学习块（2h）— 下午任何时间完成就行</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">18:00</span><span class="rhythm-act">晚餐 🍜</span></div>
+            <div class="rhythm-slot play"><span class="rhythm-time">19:00</span><span class="rhythm-act">自由时间 · 娱乐/社交 🎮</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">22:30</span><span class="rhythm-act">⚓ 准备睡觉（核心锚点！）</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">23:00</span><span class="rhythm-act">睡觉 😴</span></div>
+          </div>
+          <div class="rhythm-note">
+            🎯 <strong>本周唯一目标：08:00起 / 23:00睡</strong><br>
+            ⚓ 这两个锚点固定下来就是胜利，其他一切照旧<br>
+            📚 学习只需下午完成2h，压力最小<br>
+            ${daysUntilNext > 0 ? `📅 坚持${daysUntilNext}天后自动升级到第2阶段` : '✅ 锚点已建立！即将进入第2阶段'}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  if (phase === 2) {
+    // Phase 2: Add morning study block, fixed breakfast
+    return `
+      <div class="daily-rhythm expanded" id="daily-rhythm">
+        <div class="daily-rhythm-header" onclick="document.getElementById('daily-rhythm').classList.toggle('expanded')">
+          <span class="rhythm-title">📅 今日节奏 · ${p.name}</span>
+          <span style="font-size:0.7rem;color:var(--text-muted);">收起 ▲</span>
+        </div>
+        <div class="daily-rhythm-body">
+          ${phaseBar}
+          <div class="rhythm-timeline">
+            <div class="rhythm-slot rest"><span class="rhythm-time">08:00</span><span class="rhythm-act">起床 + 洗漱 🌅（锚点保持）</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">08:30</span><span class="rhythm-act">早餐 🍳（新增：固定早餐时间）</span></div>
+            <div class="rhythm-slot study"><span class="rhythm-time">09:00</span><span class="rhythm-act">🟡 学习块1（2h）— 新增：上午开始学习</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">11:00</span><span class="rhythm-act">自由时间</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">12:00</span><span class="rhythm-act">午餐 🥗</span></div>
+            <div class="rhythm-slot study"><span class="rhythm-time">14:00</span><span class="rhythm-act">🟢 学习块2（2h）— 练习/实操</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">16:00</span><span class="rhythm-act">之后自由安排</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">18:00</span><span class="rhythm-act">晚餐 🍜</span></div>
+            <div class="rhythm-slot play"><span class="rhythm-time">19:00</span><span class="rhythm-act">自由时间 🎮</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">23:00</span><span class="rhythm-act">睡觉 😴（锚点保持）</span></div>
+          </div>
+          <div class="rhythm-note">
+            🎯 <strong>今日学习目标：4小时</strong>（上午2h + 下午2h）<br>
+            🆕 本周新增：固定早餐时间 + 上午开始学习<br>
+            ⚓ 起床/睡觉锚点继续保持<br>
+            ${daysUntilNext > 0 ? `📅 坚持${daysUntilNext}天后自动升级到第3阶段` : '✅ 上午习惯已建立！即将进入第3阶段'}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  if (phase === 3) {
+    // Phase 3: Full framework, add nap + exercise, 6h study
+    return `
+      <div class="daily-rhythm expanded" id="daily-rhythm">
+        <div class="daily-rhythm-header" onclick="document.getElementById('daily-rhythm').classList.toggle('expanded')">
+          <span class="rhythm-title">📅 今日节奏 · ${p.name}</span>
+          <span style="font-size:0.7rem;color:var(--text-muted);">收起 ▲</span>
+        </div>
+        <div class="daily-rhythm-body">
+          ${phaseBar}
+          <div class="rhythm-timeline">
+            <div class="rhythm-slot rest"><span class="rhythm-time">08:00</span><span class="rhythm-act">起床 🌅</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">08:30</span><span class="rhythm-act">早餐 🍳</span></div>
+            <div class="rhythm-slot study"><span class="rhythm-time">09:00</span><span class="rhythm-act">🔴 学习块1：深度专注（3h）</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">12:00</span><span class="rhythm-act">午餐 🥗</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">12:30</span><span class="rhythm-act">🆕 午休30min（新增习惯）</span></div>
+            <div class="rhythm-slot study"><span class="rhythm-time">13:00</span><span class="rhythm-act">🟡 学习块2：练习/实操（2h）</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">15:00</span><span class="rhythm-act">下午茶 ☕ 15min</span></div>
+            <div class="rhythm-slot study"><span class="rhythm-time">15:15</span><span class="rhythm-act">🟢 学习块3：复习（1h）</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">16:15</span><span class="rhythm-act">🆕 运动/散步 30min（新增习惯）</span></div>
+            <div class="rhythm-slot meal"><span class="rhythm-time">18:00</span><span class="rhythm-act">晚餐 🍜</span></div>
+            <div class="rhythm-slot play"><span class="rhythm-time">19:00</span><span class="rhythm-act">自由时间 🎮</span></div>
+            <div class="rhythm-slot rest"><span class="rhythm-time">23:00</span><span class="rhythm-act">睡觉 😴</span></div>
+          </div>
+          <div class="rhythm-note">
+            🎯 <strong>今日学习目标：6小时</strong>（3+2+1）<br>
+            🆕 本周新增：午休30min + 傍晚运动30min<br>
+            💪 完整作息框架已建立！<br>
+            ${daysUntilNext > 0 ? `📅 坚持${daysUntilNext}天后自动升级到第4阶段（最终稳定版）` : '✅ 节奏已成型！即将进入最终稳定期'}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // Phase 4: Full 7h stable plan
+  return `
+    <div class="daily-rhythm expanded" id="daily-rhythm">
+      <div class="daily-rhythm-header" onclick="document.getElementById('daily-rhythm').classList.toggle('expanded')">
+        <span class="rhythm-title">📅 今日节奏 · ${p.name}</span>
+        <span style="font-size:0.7rem;color:var(--text-muted);">收起 ▲</span>
+      </div>
+      <div class="daily-rhythm-body">
+        ${phaseBar}
+        <div class="rhythm-timeline">
+          <div class="rhythm-slot rest"><span class="rhythm-time">07:30</span><span class="rhythm-act">起床 + 洗漱 🌅</span></div>
+          <div class="rhythm-slot meal"><span class="rhythm-time">08:00</span><span class="rhythm-act">早餐 🍳</span></div>
+          <div class="rhythm-slot study"><span class="rhythm-time">08:30</span><span class="rhythm-act">🔴 学习块1：深度专注（3h）— 最难任务</span></div>
+          <div class="rhythm-slot rest"><span class="rhythm-time">11:30</span><span class="rhythm-act">休息 ☀️</span></div>
+          <div class="rhythm-slot meal"><span class="rhythm-time">12:00</span><span class="rhythm-act">午餐 🥗</span></div>
+          <div class="rhythm-slot rest"><span class="rhythm-time">12:30</span><span class="rhythm-act">午休 30min 😴</span></div>
+          <div class="rhythm-slot study"><span class="rhythm-time">13:00</span><span class="rhythm-act">🟡 学习块2：练习/实操（2.5h）</span></div>
+          <div class="rhythm-slot rest"><span class="rhythm-time">15:30</span><span class="rhythm-act">下午茶 ☕ 15min</span></div>
+          <div class="rhythm-slot study"><span class="rhythm-time">15:45</span><span class="rhythm-act">🟢 学习块3：复习/轻量（1.5h）</span></div>
+          <div class="rhythm-slot rest"><span class="rhythm-time">17:15</span><span class="rhythm-act">运动/散步 🏃 45min</span></div>
+          <div class="rhythm-slot meal"><span class="rhythm-time">18:00</span><span class="rhythm-act">晚餐 🍜</span></div>
+          <div class="rhythm-slot play"><span class="rhythm-time">18:30</span><span class="rhythm-act">自由时间 · 娱乐/社交 🎮</span></div>
+          <div class="rhythm-slot rest"><span class="rhythm-time">22:00</span><span class="rhythm-act">洗漱放松 🛁</span></div>
+          <div class="rhythm-slot rest"><span class="rhythm-time">22:30</span><span class="rhythm-act">阅读/速写（轻松创作）</span></div>
+          <div class="rhythm-slot rest"><span class="rhythm-time">23:00</span><span class="rhythm-act">睡觉 😴（8h睡眠）</span></div>
+        </div>
+        <div class="rhythm-note">
+          ✅ <strong>今日学习目标：7小时</strong>（3+2.5+1.5）· 完整稳定运行<br>
+          🍅 番茄工作法：50min专注 + 10min休息<br>
+          ⚡ 最难点放上午 · 午休有研究支持 · 晚上不强制学习<br>
+          🏆 四周渐进校准完成！你已经建立了可持续的学习节奏
+        </div>
+      </div>
+    </div>`;
+}
+
+// 计算当前阶段已进行天数
+function getPhaseDays() {
+  if (!state.rhythmStartDate) return 0;
+  const start = parseDate(state.rhythmStartDate);
+  // Each phase is 7 days, so offset by (phase-1)*7
+  const phaseStart = new Date(start);
+  phaseStart.setDate(phaseStart.getDate() + (state.rhythmPhase - 1) * 7);
+  const today = new Date();
+  const diff = Math.floor((today - phaseStart) / (1000 * 60 * 60 * 24));
+  return Math.max(0, diff);
+}
+
+// 自动推进阶段
+function checkRhythmAdvance() {
+  if (state.rhythmPhase >= 4) return;
+  const days = getPhaseDays();
+  if (days >= 7) {
+    state.rhythmPhase++;
+    saveState();
+    const phases = { 2: '🌅 上午激活期', 3: '🔄 全天节奏期', 4: '✅ 稳定期' };
+    showToast(`节奏校准升级！进入第${state.rhythmPhase}阶段：${phases[state.rhythmPhase]}`, 'success', 5000);
+  }
+}
+
+// --- 周五周反思卡片 ---
+function renderWeeklyReflection(week) {
+  const existing = state.weeklyReflections['week' + week] || {};
+  return `
+    <div class="weekly-reflection">
+      <h4>📝 第${week}周反思（周五）</h4>
+      <p style="font-size:0.72rem;color:var(--text-muted);margin-bottom:8px;">自我监控是行为改变最有效的基础技术之一</p>
+      <div class="ref-q">① 本周最有成就感的练习是？</div>
+      <textarea placeholder="写下你最满意的作品或进步..." onchange="saveWeeklyReflection(${week},'achievement',this.value)">${existing.achievement || ''}</textarea>
+      <div class="ref-q">② 最难的是什么？</div>
+      <textarea placeholder="什么让你感到困难或想拖延？" onchange="saveWeeklyReflection(${week},'difficulty',this.value)">${existing.difficulty || ''}</textarea>
+      <div class="ref-q">③ 下周想调整什么？</div>
+      <textarea placeholder="时间安排？学习方法？练习顺序？" onchange="saveWeeklyReflection(${week},'adjust',this.value)">${existing.adjust || ''}</textarea>
+    </div>
+  `;
+}
+
+// ==================== PWA 设置 ====================
+function setupPWA() {
+  // Inline manifest as Blob URL
+  const manifest = {
+    name: '场景原画学习助手',
+    short_name: '场景原画',
+    description: '12周系统学习场景原画的手机自律助手',
+    start_url: location.href,
+    display: 'standalone',
+    orientation: 'portrait',
+    background_color: '#FFF5ED',
+    theme_color: '#FFF5ED',
+    icons: [{
+      src: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192"><rect width="192" height="192" rx="32" fill="#FF6B4A"/><text x="96" y="110" text-anchor="middle" font-size="80">🎨</text></svg>'),
+      sizes: '192x192',
+      type: 'image/svg+xml',
+      purpose: 'any maskable'
+    }]
+  };
+
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  const manifestUrl = URL.createObjectURL(blob);
+
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = manifestUrl;
+  document.head.appendChild(link);
+
+  // Register service worker if supported
+  if ('serviceWorker' in navigator) {
+    // Try to register an external sw.js if it exists
+    fetch('sw.js', { method: 'HEAD' }).then(resp => {
+      if (resp.ok) {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      }
+    }).catch(() => {
+      // No external SW file, that's OK - app works without it
+    });
+  }
+
+  // Listen for PWA install prompt
+  window.addEventListener('beforeinstallprompt', (e) => {
+    // Store the prompt for later use if needed
+    window._deferredPrompt = e;
+  });
+
+  // Detect standalone mode
+  if (window.matchMedia('(display-mode: standalone)').matches) {
+    document.body.classList.add('pwa-standalone');
+  }
+}
+
+// ==================== 标签导航 ====================
+function switchTab(tabName) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+  const view = document.getElementById('view-' + tabName);
+  if (view) view.classList.add('active');
+
+  const btn = document.querySelector(`[data-tab="${tabName}"]`);
+  if (btn) btn.classList.add('active');
+
+  // Render the active view
+  if (tabName === 'today') renderToday();
+  else if (tabName === 'progress') renderProgress();
+  else if (tabName === 'roadmap') renderRoadmap();
+  else if (tabName === 'settings') renderSettings();
+
+  // Save last tab
+  try { sessionStorage.setItem('last_tab', tabName); } catch(_) {}
+}
+
+// ==================== 全局渲染 ====================
+function renderAll() {
+  const activeTab = document.querySelector('.view.active');
+  if (!activeTab) return;
+  const tabId = activeTab.id.replace('view-', '');
+  switchTab(tabId);
+}
+
+// ==================== 初始化 ====================
+function init() {
+  loadState();
+  updateStats();
+
+  // Check for missed tasks yesterday
+  const missed = checkMissedYesterday();
+
+  // Check rhythm phase advancement
+  checkRhythmAdvance();
+
+  // Setup PWA
+  setupPWA();
+
+  // Setup tab navigation
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  // Render initial view
+  renderToday();
+
+  // Request notification permission (after user interaction proxy)
+  setTimeout(() => {
+    if (state.startedAt && state.reminderEnabled) {
+      requestNotificationPermission();
+      scheduleReminder();
+    }
+  }, 2000);
+
+  // Show missed tasks modal if detected
+  if (missed) {
+    setTimeout(() => {
+      showModal('⚠️ 昨日任务未完成', `
+        <p>检测到昨天（${missed.date}）有学习任务未完成：</p>
+        <p style="font-size:0.9rem;color:var(--text-primary);">
+          第${missed.week}周 · ${DAY_LABELS[missed.dayKey]}<br>
+          完成 ${missed.totalCount - missed.missedCount}/${missed.totalCount} 项，缺 ${missed.missedCount} 项
+        </p>
+        <p style="color:var(--danger);font-weight:600;">罚金 +¥${missed.amount}（累计 ¥${state.penaltyBalance}）</p>
+        <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px;">💡 CBT反思：识别拖延原因是改变的第一步（Rozental 2018: CBT对拖延效应量g=0.55）</p>
+        <div class="reason-chips" id="reason-chips">
+          <span class="reason-chip" data-reason="too_tired" onclick="document.querySelectorAll('#reason-chips .reason-chip').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');">😴 太累了</span>
+          <span class="reason-chip" data-reason="phone_distracted" onclick="document.querySelectorAll('#reason-chips .reason-chip').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');">📱 手机分心</span>
+          <span class="reason-chip" data-reason="too_hard" onclick="document.querySelectorAll('#reason-chips .reason-chip').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');">😰 任务太难不敢开始</span>
+          <span class="reason-chip" data-reason="busy" onclick="document.querySelectorAll('#reason-chips .reason-chip').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');">🏃 临时有事</span>
+          <span class="reason-chip" data-reason="no_motivation" onclick="document.querySelectorAll('#reason-chips .reason-chip').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');">🤷 就是不想动</span>
+        </div>
+      `, [
+        { label: '跳过 😔', cls: 'btn-outline' },
+        { label: '记录原因 ✍️', cls: 'btn-primary' }
+      ]).then(idx => {
+        if (idx === 1) {
+          const selected = document.querySelector('#reason-chips .reason-chip.selected');
+          if (selected) {
+            const reason = selected.dataset.reason;
+            logProcrastinationReason(reason, '');
+          }
+        }
+        renderToday();
+      });
+    }, 500);
+  }
+
+  // Restore last tab if available
+  try {
+    const lastTab = sessionStorage.getItem('last_tab');
+    if (lastTab && ['today', 'progress', 'roadmap', 'settings'].includes(lastTab)) {
+      switchTab(lastTab);
+    }
+  } catch(_) {}
+
+  console.log('🎨 场景原画学习助手已就绪');
+  console.log('💡 提示：在手机浏览器打开 → 添加到主屏幕 → 获得App体验');
+  console.log('📱 Android: Chrome菜单 → 添加到主屏幕');
+  console.log('📱 iOS: Safari分享按钮 → 添加到主屏幕');
+}
+
+// ==================== 启动 ====================
+document.addEventListener('DOMContentLoaded', init);
+
+// Handle visibility change - refresh data when app comes to foreground
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    loadState();
+    updateStats();
+    const missed = checkMissedYesterday();
+    renderAll();
+    if (missed) {
+      showToast(`昨日缺勤，罚金+¥${missed.amount}（累计¥${state.penaltyBalance}）`, 'warn', 4000);
+    }
+  }
+});
+</script>
+</body>
+</html>
