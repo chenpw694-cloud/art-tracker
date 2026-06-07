@@ -951,8 +951,11 @@ body {
 <div id="app">
   <header class="app-header">
     <h1>🎨 场景原画学习助手</h1>
-    <div class="subtitle" id="header-subtitle">12周系统学习计划</div>
+    <div class="subtitle" id="header-subtitle">12周系统学习计划 · v2026.06.08</div>
   </header>
+
+  <!-- 诊断面板（确认后删除） -->
+  <div id="debug-panel" style="margin:8px 12px;padding:8px 12px;background:#FFF0E8;border-radius:8px;font-size:0.7rem;color:#C77D20;display:none;"></div>
 
   <main class="main-content" id="main-content">
     <!-- Today View -->
@@ -1862,7 +1865,7 @@ function showModal(title, bodyHtml, actions) {
       <h3>${title}</h3>
       <div>${bodyHtml}</div>
       <div class="btn-row">${actions.map((a, i) =>
-        `<button class="btn ${a.cls || 'btn-primary'}" data-action="${i}">${a.label}</button>`
+        `<button class="btn ${a.cls || 'btn-primary'}" data-action="${i}"${a.id ? ` id="${a.id}"` : ''}>${a.label}</button>`
       ).join('')}</div>
     </div>
   `;
@@ -1871,15 +1874,15 @@ function showModal(title, bodyHtml, actions) {
   return new Promise((resolve) => {
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay) {
-        overlay.remove();
         resolve(-1);
+        overlay.remove();
       }
     });
     overlay.querySelectorAll('[data-action]').forEach(btn => {
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.dataset.action);
-        overlay.remove();
         resolve(idx);
+        setTimeout(() => overlay.remove(), 0);
       });
     });
   });
@@ -1960,9 +1963,13 @@ function renderToday() {
         <div class="empty-icon">🚀</div>
         <p style="font-size:1rem;font-weight:600;color:var(--text-primary);">准备开始你的场景原画之旅</p>
         <p style="margin-top:8px;">12周系统学习计划已就绪<br>从透视基础到作品集产出</p>
-        <button class="btn btn-primary" style="margin-top:20px;" onclick="startPlan()">
-          📅 设定开始日期，立即启程
-        </button>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:16px;">
+          <input type="date" id="welcome-date-input"
+            style="width:100%;max-width:260px;padding:14px 12px;border-radius:10px;background:#fff;border:2px solid var(--accent);color:var(--text-primary);font-size:1rem;font-family:inherit;text-align:center;">
+          <button class="btn btn-primary" style="width:100%;max-width:260px;" onclick="var v=document.getElementById('welcome-date-input').value;if(v){state.startedAt=v;state.currentWeekOverride=null;state.penaltyBalance=0;state.penaltyHistory=[];saveState();updateStats();renderAll();}else{var inp=document.getElementById('welcome-date-input');inp.style.borderColor='var(--danger)';inp.focus();}">
+            🚀 确认开始
+          </button>
+        </div>
       </div>
       ${renderDailyRhythm()}
     `;
@@ -2174,37 +2181,41 @@ function getNextLearningDay() {
 }
 
 function startPlan() {
-  const today = dateStr(new Date());
   const nextMonday = getNextMonday();
 
-  showModal('设定开始日期', `
-    <p>选择你的12周学习计划开始日期。建议从<strong>周一</strong>开始，这样可以完整利用周一至周五的学习节奏。</p>
-    <div style="margin:8px 0;">
-      <label style="display:block;font-size:0.8rem;color:var(--text-muted);margin-bottom:4px;">开始日期</label>
-      <input type="date" id="start-date-input" value="${nextMonday}"
-        style="width:100%;padding:10px;border-radius:8px;background:var(--bg-secondary);border:1px solid var(--border);color:var(--text-primary);font-size:0.95rem;font-family:inherit;">
+  // 直接构建弹窗，所有事件用内联onclick（不依赖Promise）
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'start-plan-overlay';
+  overlay.innerHTML = `
+    <div class="modal-sheet">
+      <h3>📅 设定开始日期</h3>
+      <p>选择你的12周学习计划开始日期。</p>
+      <div style="margin:8px 0;">
+        <input type="date" id="start-date-input" value="${nextMonday}"
+          style="width:100%;padding:14px 12px;border-radius:10px;background:#fff;border:2px solid var(--accent);color:var(--text-primary);font-size:1rem;font-family:inherit;min-height:48px;">
+      </div>
+      <p style="font-size:0.72rem;color:var(--text-muted);">默认从最近的周一 ${nextMonday} 开始</p>
+      <div class="btn-row" style="margin-top:12px;">
+        <button class="btn btn-outline" onclick="document.getElementById('start-plan-overlay').remove()">取消</button>
+        <button class="btn btn-primary" onclick="
+          var inp=document.getElementById('start-date-input');
+          var d=inp&&inp.value?inp.value:'${nextMonday}';
+          state.startedAt=d;state.currentWeekOverride=null;
+          state.penaltyBalance=0;state.penaltyHistory=[];
+          saveState();updateStats();
+          document.getElementById('start-plan-overlay').remove();
+          renderAll();
+          try{requestNotificationPermission();scheduleReminder();}catch(e){}
+        ">🚀 确认开始</button>
+      </div>
     </div>
-    <p style="font-size:0.75rem;color:var(--text-muted);">📌 建议从最近的周一开始（已自动填入）</p>
-  `, [
-    { label: '取消', cls: 'btn-outline' },
-    { label: '确认开始 🚀', cls: 'btn-primary' }
-  ]).then(idx => {
-    if (idx === 1) {
-      const input = document.getElementById('start-date-input');
-      if (input && input.value) {
-        state.startedAt = input.value;
-        state.currentWeekOverride = null;
-        state.penaltyBalance = 0;
-        state.penaltyHistory = [];
-        saveState();
-        updateStats();
-        requestNotificationPermission();
-        scheduleReminder();
-        renderToday();
-        renderAll();
-        showToast('学习计划已启动！每天上午' + state.reminderTime + '会收到提醒', 'success');
-      }
-    }
+  `;
+  document.getElementById('modal-container').appendChild(overlay);
+
+  // 点击遮罩关闭
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.remove();
   });
 }
 
@@ -2499,7 +2510,7 @@ function renderSettings() {
           <div class="setting-label">开始日期</div>
           <div class="setting-desc">${state.startedAt || '未设定'}</div>
         </div>
-        <button class="btn btn-outline btn-sm" onclick="startPlan()">${state.startedAt ? '修改' : '设定'}</button>
+          <input type="date" value="${state.startedAt || ''}" onchange="var v=this.value;if(v){state.startedAt=v;state.currentWeekOverride=null;saveState();updateStats();renderAll();}" style="padding:8px 10px;border-radius:8px;border:2px solid var(--accent);background:#fff;color:var(--text-primary);font-family:inherit;font-size:0.82rem;min-width:130px;">
       </div>
       <div class="setting-row">
         <div>
@@ -3618,10 +3629,27 @@ function init() {
     }
   } catch(_) {}
 
-  console.log('🎨 场景原画学习助手已就绪');
-  console.log('💡 提示：在手机浏览器打开 → 添加到主屏幕 → 获得App体验');
-  console.log('📱 Android: Chrome菜单 → 添加到主屏幕');
-  console.log('📱 iOS: Safari分享按钮 → 添加到主屏幕');
+  console.log('🎨 场景原画学习助手已就绪 v2026.06.08');
+
+  // 调试信息
+  const debug = document.getElementById('debug-panel');
+  if (debug) {
+    try {
+      const testKey = '_scene_test_ls';
+      localStorage.setItem(testKey, 'ok');
+      const testVal = localStorage.getItem(testKey);
+      localStorage.removeItem(testKey);
+      const lsOk = testVal === 'ok';
+      debug.style.display = 'block';
+      debug.innerHTML = `
+        🔍 版本: v2026.06.08 | 日期: ${dateStr(new Date())} | localStorage: ${lsOk ? '✅' : '❌'}<br>
+        开始日期: ${state.startedAt || '未设定'} | 当前周: ${state.startedAt ? getCurrentWeek() : '-'}
+      `;
+    } catch(e) {
+      debug.style.display = 'block';
+      debug.innerHTML = '⚠️ localStorage错误: ' + e.message;
+    }
+  }
 }
 
 // ==================== 启动 ====================
